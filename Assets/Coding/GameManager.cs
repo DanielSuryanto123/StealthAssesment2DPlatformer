@@ -5,7 +5,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int totalCoins;
-    private int collectedCoins;
+
+    private int collectedCoins = 0;
 
     public GameObject door;
 
@@ -18,13 +19,13 @@ public class GameManager : MonoBehaviour
     {
         collectedCoins++;
 
-        Debug.Log("Coins: " + collectedCoins + "/" + totalCoins);
+        Debug.Log("Collected Coins: " + collectedCoins);
 
         if (collectedCoins >= totalCoins)
         {
-            door.SetActive(false);
+            Debug.Log("ALL COINS COLLECTED");
 
-            Debug.Log("Door Opened!");
+            door.SetActive(false);
         }
     }
 }

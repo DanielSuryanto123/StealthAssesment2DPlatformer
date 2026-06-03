@@ -6,7 +6,7 @@ namespace CoLab.Telemetry
     /// Posisi dari player, hanya menyimpan koordinat x dan y
     /// </summary>
     [Serializable]
-    public class Position
+    public struct Position
     {
         public float x;
         public float y;

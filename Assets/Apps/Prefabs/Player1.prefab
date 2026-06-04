@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4301068271492552853}
   - component: {fileID: 134384697757832004}
   - component: {fileID: 6841771560661956264}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player1
   m_TagString: Player1
   m_Icon: {fileID: 0}
@@ -204,6 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   jumpForce: 8
+  isPlayerOne: 1
 --- !u!114 &6841771560661956264
 MonoBehaviour:
   m_ObjectHideFlags: 0

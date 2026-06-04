@@ -1,0 +1,14 @@
+{
+    "name": "CoLab.UI",
+    "rootNamespace": "CoLab.UI",
+    "references": ["GUID:09a42a82d1ee94644a8cdd54ef772585"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

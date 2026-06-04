@@ -8,23 +8,23 @@ namespace CoLab.Telemetry
     /// </summary>
     public class SessionDataModel
     {
-        public string sessionID;
-        public string player1ID;
-        public string player2ID;
-        public List<TelemetryDataModel> telemetryDataLogs;
+        public string session_id;
+        public string student_id_p1;
+        public string student_id_p2;
+        public List<TelemetryDataModel> raw_logs;
 
-        public SessionDataModel(string sessionID, string player1ID, string player2ID)
+        public SessionDataModel(string sessionID, string studentIDP1, string studentIDP2)
         {
-            this.player1ID = player1ID;
-            this.player2ID = player2ID;
-            this.telemetryDataLogs = new List<TelemetryDataModel>();
+            this.student_id_p1 = studentIDP1;
+            this.student_id_p2 = studentIDP2;
+            this.raw_logs = new List<TelemetryDataModel>();
         }
 
         public void Add(TelemetryDataModel model)
         {
-            telemetryDataLogs ??= new List<TelemetryDataModel>();
+            raw_logs ??= new List<TelemetryDataModel>();
 
-            telemetryDataLogs.Add(model);
+            raw_logs.Add(model);
         }
     }
 }

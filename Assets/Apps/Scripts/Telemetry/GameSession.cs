@@ -5,12 +5,12 @@ namespace CoLab.Telemetry
     public class GameSession
     {
         private float startTime;
-        private string sessionID;
-        public string SessionID => sessionID;
+        private string session_id;
+        public string SessionID => session_id;
         
         public GameSession(float startTime)
         {
-            sessionID = "ses" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            session_id = "ses" + DateTime.Now.ToString("yyyyMMddHHmmss");
             this.startTime = startTime;
         }
 

@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace CoLab.Telemetry
 {
@@ -9,6 +11,9 @@ namespace CoLab.Telemetry
     public class AnalyticsManager : MonoBehaviour
     {
         public static AnalyticsManager Instance;
+
+        private string projectURL = "https://wmljwcszcxdnockwfclr.supabase.co";
+        private string apiKey = "sb_publishable_uKnQtASk51qoTKR5mrUBZg_CUUqWMLi";
         
         private GameSession _gameSession;
         private SessionDataModel _sessionDataModel;
@@ -39,7 +44,6 @@ namespace CoLab.Telemetry
 
         public void EndSession()
         {
-            string json = GetSessionJSON();
             _gameSession = null;
             _sessionDataModel = null;
         }
@@ -61,6 +65,44 @@ namespace CoLab.Telemetry
         {
             float timestamp = _gameSession.GetRelativeTimestamp(Time.time);
             _sessionDataModel.Add(new TelemetryDataModel(stageID, timestamp, eventType, duration, playerId, playerPositionDataModel, partnerPositionDataModel, isTrapped));
+        }
+
+        public IEnumerator SendData()
+        {
+            string url = projectURL + "/rest/v1/telemetry_sessions";
+            string jsonData = GetSessionJSON();
+            UnityWebRequest request = new UnityWebRequest(url, "POST");
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+            
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("apikey", apiKey);
+            request.SetRequestHeader("Authorization", "Bearer " + apiKey);
+            request.SetRequestHeader("Prefer", "return=minimal");
+            
+            yield return request.SendWebRequest();
+            
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("GAGAL mengirim data ke Supabase: " + request.error);
+                Debug.LogError("Pesan Error Server: " + request.downloadHandler.text);
+            
+                // Opsional: Buat logika UI untuk memberitahu mahasiswa agar jangan menutup game dulu 
+                // dan berikan tombol "Coba Kirim Ulang" (Retry).
+            }
+            else
+            {
+                Debug.Log("SUKSES! Data telemetri berhasil diamankan di Supabase.");
+            
+                // Opsional: Bersihkan container agar siap untuk mahasiswa berikutnya
+                EndSession();
+            
+                // Panggil fungsi untuk memunculkan Layar Game Over / Result Screen
+                // ShowResultScreen(); 
+            }
+            
         }
     }
 }

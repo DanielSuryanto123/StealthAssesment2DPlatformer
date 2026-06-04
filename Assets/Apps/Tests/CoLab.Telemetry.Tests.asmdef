@@ -3,6 +3,9 @@
   "references": [
     "Co-Lab.Telemetry"
   ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

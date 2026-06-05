@@ -818,7 +818,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: CoLab.UI::CoLab.UI.PlayerIDWidget
   _hideOnStart: 1
-  startGameButton: {fileID: 0}
+  player1IDInputField: {fileID: 0}
+  player2IDInputField: {fileID: 0}
 --- !u!1 &1775169404
 GameObject:
   m_ObjectHideFlags: 0
@@ -1519,7 +1520,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1677824056}
-  - {fileID: 97670860681859160}
   - {fileID: 1780784212}
+  - {fileID: 97670860681859160}
   - {fileID: 1737494991}
   - {fileID: 1629946427103095111}

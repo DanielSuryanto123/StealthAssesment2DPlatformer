@@ -20,12 +20,18 @@ namespace CoLab.UI
 
         private void StartGame()
         {
-            
-        }
+            string player1ID = player1IDInputField.text;
+            string player2ID = player2IDInputField.text;
 
-        private void IsValidID()
-        {
-            throw new NotImplementedException();
+            string errorMessagePlayer1 = StringValidator.ValidateID(player1ID);
+            string errorMessagePlayer2 = StringValidator.ValidateID(player2ID);
+
+            if (errorMessagePlayer1 != "" || errorMessagePlayer2 != "")
+            {
+                return;
+            }
+            
+            AnalyticsManager.Instance.StartSession(player1ID, player2ID);
         }
 
         private void OnEnable()

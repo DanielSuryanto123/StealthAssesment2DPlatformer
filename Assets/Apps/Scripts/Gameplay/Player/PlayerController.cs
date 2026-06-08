@@ -1,9 +1,20 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InputHandler))]
 public class PlayerController : MonoBehaviour
 {
+
+    [Header("Ping")]
+    [SerializeField] private GameObject pingIcon;
+
+    [SerializeField] private float pingDuration = 1.5f;
+
+    [SerializeField] private float pingCooldown = 3f;
+
+    private bool canPing = true;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
 
@@ -23,11 +34,17 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-    if (inputHandler.JumpPressed && isGrounded)
-    {
-        Jump();
-        inputHandler.ResetJump();
-    }
+        if (inputHandler.JumpPressed && isGrounded)
+        {
+            Jump();
+            inputHandler.ResetJump();
+        }
+        if (inputHandler.PingPressed && canPing)
+        {
+            StartCoroutine(DoPing());
+
+            inputHandler.ResetPing();
+        }
     }
 
     private void FixedUpdate()
@@ -65,5 +82,19 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
         }
+    }
+    private IEnumerator DoPing()
+    {
+        canPing = false;
+
+        pingIcon.SetActive(true);
+
+        yield return new WaitForSeconds(pingDuration);
+
+        pingIcon.SetActive(false);
+
+        yield return new WaitForSeconds(pingCooldown);
+
+        canPing = true;
     }
 }

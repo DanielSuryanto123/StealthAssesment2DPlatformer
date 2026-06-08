@@ -9,6 +9,8 @@ public class InputHandler : MonoBehaviour
 
     public bool InteractPressed { get; private set; }
 
+    public bool PingPressed { get; private set; }
+
    public void OnMove(InputValue value)
 {
     MoveInput = value.Get<Vector2>();
@@ -28,5 +30,18 @@ public class InputHandler : MonoBehaviour
     public void OnInteract(InputValue value)
     {
         InteractPressed = value.isPressed;
+    }
+
+    public void OnPing(InputValue value)
+    {
+    if (value.isPressed)
+    {
+        PingPressed = true;
+    }
+    }
+
+    public void ResetPing()
+    {
+    PingPressed = false;
     }
 }

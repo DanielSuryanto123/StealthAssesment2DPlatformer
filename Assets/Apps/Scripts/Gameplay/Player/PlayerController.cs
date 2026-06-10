@@ -6,10 +6,10 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
 
-    [Header("Ping")]
-    [SerializeField] private GameObject pingIcon;
+    
 
-    [SerializeField] private float pingDuration = 1.5f;
+    [SerializeField] private GameObject pingPrefab;
+    [SerializeField] private Transform pingSpawnPoint;
 
     [SerializeField] private float pingCooldown = 3f;
 
@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
         if (inputHandler.PingPressed && canPing)
         {
             StartCoroutine(DoPing());
-
             inputHandler.ResetPing();
         }
     }
@@ -85,13 +84,15 @@ public class PlayerController : MonoBehaviour
     }
     private IEnumerator DoPing()
     {
-        canPing = false;
+     canPing = false;
 
-        pingIcon.SetActive(true);
+        GameObject ping = Instantiate(
+            pingPrefab,
+            pingSpawnPoint.position,
+            Quaternion.identity
+        );
 
-        yield return new WaitForSeconds(pingDuration);
-
-        pingIcon.SetActive(false);
+     Destroy(ping, 1.5f);
 
         yield return new WaitForSeconds(pingCooldown);
 

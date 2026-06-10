@@ -40,8 +40,8 @@ public class InputHandler : MonoBehaviour
     }
     }
 
-    public void ResetPing()
+   public void ResetPing()
     {
-    PingPressed = false;
+        PingPressed = false;
     }
 }

@@ -204,7 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   jumpForce: 8
-  isPlayerOne: 1
+  isPlayerOne: 0
 --- !u!114 &1719450149175955133
 MonoBehaviour:
   m_ObjectHideFlags: 0

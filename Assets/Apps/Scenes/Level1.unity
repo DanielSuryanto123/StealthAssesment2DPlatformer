@@ -271,11 +271,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8986635834292791412, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.1
+      value: 2.05
       objectReference: {fileID: 0}
     - target: {fileID: 8986635834292791412, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.47
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 8986635834292791412, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1604,7 +1604,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -2.5, y: -1.5}
+  m_Offset: {x: 0.5, y: -1.85}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1614,7 +1614,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 21, y: 3}
+  m_Size: {x: 27.15, y: 2.15}
   m_EdgeRadius: 0
 --- !u!1 &1126525386
 GameObject:
@@ -1896,3 +1896,4 @@ SceneRoots:
   - {fileID: 430474958}
   - {fileID: 2122753273}
   - {fileID: 1274549322618938844}
+  - {fileID: 1126525388}

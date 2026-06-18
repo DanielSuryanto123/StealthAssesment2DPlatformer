@@ -1,9 +1,20 @@
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InputHandler))]
 public class PlayerController : MonoBehaviour
 {
+
+    
+
+    [SerializeField] private GameObject pingPrefab;
+    [SerializeField] private Transform pingSpawnPoint;
+
+    [SerializeField] private float pingCooldown = 3f;
+
+    private bool canPing = true;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
 
@@ -23,11 +34,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-    if (inputHandler.JumpPressed && isGrounded)
-    {
-        Jump();
-        inputHandler.ResetJump();
-    }
+        if (inputHandler.JumpPressed && isGrounded)
+        {
+            Jump();
+            inputHandler.ResetJump();
+        }
+        if (inputHandler.PingPressed && canPing)
+        {
+            StartCoroutine(DoPing());
+            inputHandler.ResetPing();
+        }
     }
 
     private void FixedUpdate()
@@ -65,5 +81,21 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
         }
+    }
+    private IEnumerator DoPing()
+    {
+     canPing = false;
+
+        GameObject ping = Instantiate(
+            pingPrefab,
+            pingSpawnPoint.position,
+            Quaternion.identity
+        );
+
+     Destroy(ping, 1.5f);
+
+        yield return new WaitForSeconds(pingCooldown);
+
+        canPing = true;
     }
 }

@@ -1773,7 +1773,7 @@ GameObject:
   - component: {fileID: 1648508734}
   - component: {fileID: 1648508736}
   - component: {fileID: 1648508735}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BlueTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2028,7 +2028,7 @@ GameObject:
   - component: {fileID: 1667718668}
   - component: {fileID: 1667718670}
   - component: {fileID: 1667718669}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RedTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,6 +12,7 @@ namespace CoLab.UI
 		private Canvas _canvas;
         private Image _keyImage;
         private TMP_Text _keyText;
+        
 
         private void Awake()
         {
@@ -24,6 +24,7 @@ namespace CoLab.UI
             KeyPressHintSO keyPress = KeyPressHintSO.GetKeyFromList(key, keyPressHints);
             _keyImage.sprite = keyPress.keySprite;
             _keyText.text = keyPress.keyLabel;
+            Show();
         }
 
         public void Show()

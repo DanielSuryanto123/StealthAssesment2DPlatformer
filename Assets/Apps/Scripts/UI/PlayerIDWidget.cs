@@ -2,13 +2,14 @@ using System;
 using CoLab.Telemetry;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace CoLab.UI
 {
     public class PlayerIDWidget : Widget
     {
-        [SerializeField] private InputField player1IDInputField;
-        [SerializeField] private InputField player2IDInputField;
+        [SerializeField] private TMP_InputField player1IDInputField;
+        [SerializeField] private TMP_InputField player2IDInputField;
         private Button startGameButton;
 
         private new void Awake()
@@ -28,6 +29,7 @@ namespace CoLab.UI
 
             if (errorMessagePlayer1 != "" || errorMessagePlayer2 != "")
             {
+                Debug.Log(errorMessagePlayer1 + "\n" + errorMessagePlayer2);
                 return;
             }
             

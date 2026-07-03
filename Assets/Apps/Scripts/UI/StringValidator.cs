@@ -11,6 +11,11 @@ namespace CoLab.UI
                 return "Must be alphanumeric";
             }
 
+            if (id == "")
+            {
+                return "Must not be empty";
+            }
+
             return "";
         }
     }

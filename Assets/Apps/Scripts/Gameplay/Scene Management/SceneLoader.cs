@@ -37,6 +37,7 @@ public class SceneLoader : MonoBehaviour, IWidget
 
     private void Start()
     {
+        EnableInteraction(true);
         FadeIn();
     }
 
@@ -60,14 +61,14 @@ public class SceneLoader : MonoBehaviour, IWidget
     [ContextMenu("Fade In")]
     public Tween FadeIn()
     {
-        // _canvasGroup.alpha = 1f;
+        _canvasGroup.alpha = 1f;
         return _canvasGroup.DOFade(0f, transitionDuration);
     }
 
     [ContextMenu("Fade Out")]
     public Tween FadeOut()
     {
-        // _canvasGroup.alpha = 0f;
+        _canvasGroup.alpha = 0f;
         return _canvasGroup.DOFade(1f, transitionDuration);
     }
 

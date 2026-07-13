@@ -186,7 +186,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 545867311593298470, guid: cb15f5c99e09f2f4eaa3855d35b4e3a5, type: 3}
       propertyPath: m_Name
-      value: Player1 (1)
+      value: 'Player1 '
       objectReference: {fileID: 0}
     - target: {fileID: 5400419196148490507, guid: cb15f5c99e09f2f4eaa3855d35b4e3a5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -233,6 +233,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb15f5c99e09f2f4eaa3855d35b4e3a5, type: 3}
+--- !u!4 &55632221 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5400419196148490507, guid: cb15f5c99e09f2f4eaa3855d35b4e3a5, type: 3}
+  m_PrefabInstance: {fileID: 55632220}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &233528586
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +621,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -659,8 +664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ffb9582fb5471418f49ca63db3bc24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
-  player1: {fileID: 0}
-  player2: {fileID: 0}
+  Player1: {fileID: 55632221}
+  Player2: {fileID: 542185929}
   smoothSpeed: 5
 --- !u!1001 &542185928
 PrefabInstance:
@@ -672,7 +677,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6513807810187999365, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
       propertyPath: m_Name
-      value: Player2 (1)
+      value: 'Player2 '
       objectReference: {fileID: 0}
     - target: {fileID: 8986635834292791412, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
       propertyPath: m_LocalPosition.x
@@ -719,6 +724,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
+--- !u!4 &542185929 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8986635834292791412, guid: e32d57fbda6ea0e41966a6fa4aaa8a15, type: 3}
+  m_PrefabInstance: {fileID: 542185928}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,6 +824,9 @@ GameObject:
   - component: {fileID: 804199103}
   - component: {fileID: 804199105}
   - component: {fileID: 804199104}
+  - component: {fileID: 804199106}
+  - component: {fileID: 804199108}
+  - component: {fileID: 804199107}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -1468,6 +1481,116 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!19719996 &804199106
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804199102}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
+--- !u!66 &804199107
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804199102}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 804199102}
+--- !u!50 &804199108
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804199102}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1262719647
 GameObject:
   m_ObjectHideFlags: 0

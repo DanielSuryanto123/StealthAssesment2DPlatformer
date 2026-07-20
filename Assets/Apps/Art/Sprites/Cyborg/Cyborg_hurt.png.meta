@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: a640cbcc3e172c7408b6d0925a27ebee
+guid: 218df4d25e57087429bdc5c148125bd8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3807722896295604221
-    second: Game Title_0
+      213: 1372562320747842243
+    second: Cyborg_hurt_0
+  - first:
+      213: -3255611989448627187
+    second: Cyborg_hurt_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +99,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Game Title_0
+      name: Cyborg_hurt_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 2
         y: 0
-        width: 1024
-        height: 512
+        width: 21
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +131,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 300dd233330482bc0800000000000000
-      internalID: -3807722896295604221
+      spriteID: 3cac24898225c0310800000000000000
+      internalID: 1372562320747842243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cyborg_hurt_1
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 23
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0c6962052eb1d2d0800000000000000
+      internalID: -3255611989448627187
       vertices: []
       indices: 
       edges: []
@@ -135,7 +173,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Game Title_0: -3807722896295604221
+      Cyborg_hurt_0: 1372562320747842243
+      Cyborg_hurt_1: -3255611989448627187
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

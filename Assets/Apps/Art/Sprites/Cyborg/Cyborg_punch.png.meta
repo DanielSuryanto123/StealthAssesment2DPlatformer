@@ -52,7 +52,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -66,7 +66,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 48
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -90,7 +90,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -131,20 +131,20 @@ TextureImporter:
       name: Cyborg_punch_0
       rect:
         serializedVersion: 2
-        x: 2
+        x: 0
         y: 0
-        width: 21
-        height: 36
+        width: 48
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: c46327f6dd9146490800000000000000
-      internalID: -7754044219576928692
+      spriteID: 40ad83fa3ec5f034f8ca6651458ef06b
+      internalID: -1224965440
       vertices: []
       indices: 
       edges: []
@@ -153,20 +153,20 @@ TextureImporter:
       name: Cyborg_punch_1
       rect:
         serializedVersion: 2
-        x: 50
+        x: 48
         y: 0
-        width: 21
-        height: 36
+        width: 48
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 558331d47408ced70800000000000000
-      internalID: 9073768392968845397
+      spriteID: 320fc7d8a5819034088c080da5f130b1
+      internalID: 1629967103
       vertices: []
       indices: 
       edges: []
@@ -175,20 +175,20 @@ TextureImporter:
       name: Cyborg_punch_2
       rect:
         serializedVersion: 2
-        x: 98
+        x: 96
         y: 0
-        width: 21
-        height: 36
+        width: 48
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: be12c84404b3a9b50800000000000000
-      internalID: 6600653351078863339
+      spriteID: 653dea26b878a594bb3297944a74edb8
+      internalID: -637793466
       vertices: []
       indices: 
       edges: []
@@ -197,20 +197,20 @@ TextureImporter:
       name: Cyborg_punch_3
       rect:
         serializedVersion: 2
-        x: 148
+        x: 144
         y: 0
-        width: 19
-        height: 35
+        width: 48
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: cc442e633f80e0190800000000000000
-      internalID: -7994442447845178164
+      spriteID: be97b5c30f29082499e9a85ab262f1b4
+      internalID: 1275728041
       vertices: []
       indices: 
       edges: []
@@ -219,20 +219,20 @@ TextureImporter:
       name: Cyborg_punch_4
       rect:
         serializedVersion: 2
-        x: 197
+        x: 192
         y: 0
-        width: 27
-        height: 35
+        width: 48
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 997a668b9a1e82b60800000000000000
-      internalID: 7721669680186173337
+      spriteID: 5b10e4ff242a30b439f589c62835db7f
+      internalID: 200759030
       vertices: []
       indices: 
       edges: []
@@ -241,20 +241,20 @@ TextureImporter:
       name: Cyborg_punch_5
       rect:
         serializedVersion: 2
-        x: 246
+        x: 240
         y: 0
-        width: 17
-        height: 36
+        width: 48
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 0e8d9609de4fe19c0800000000000000
-      internalID: -3954454121617434400
+      spriteID: ae89ebd6fc409204ea2484ffe3da173f
+      internalID: -1247710843
       vertices: []
       indices: 
       edges: []
@@ -263,7 +263,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 719f5edb5867c2f46804722711b8ad4f
     internalID: 0
     vertices: []
     indices: 
@@ -271,14 +271,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":48.0,"y":48.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Cyborg_punch_0: -7754044219576928692
-      Cyborg_punch_1: 9073768392968845397
-      Cyborg_punch_2: 6600653351078863339
-      Cyborg_punch_3: -7994442447845178164
-      Cyborg_punch_4: 7721669680186173337
-      Cyborg_punch_5: -3954454121617434400
+      Cyborg_punch_0: -1224965440
+      Cyborg_punch_1: 1629967103
+      Cyborg_punch_2: -637793466
+      Cyborg_punch_3: 1275728041
+      Cyborg_punch_4: 200759030
+      Cyborg_punch_5: -1247710843
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

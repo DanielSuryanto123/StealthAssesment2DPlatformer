@@ -6,16 +6,18 @@ TagManager:
   tags:
   - Ground
   - Players
+  - Player2
+  - Player1
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - RedPlayer
   - Water
   - UI
-  - 
-  - 
-  - 
+  - BluePlayer
+  - RedPlatform
+  - BluePlatform
   - 
   - 
   - 

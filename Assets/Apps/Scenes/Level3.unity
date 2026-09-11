@@ -2082,7 +2082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4516793382678007887, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_DefaultControlScheme
-      value: Keyboard
+      value: Gamepad Controller
       objectReference: {fileID: 0}
     - target: {fileID: 4516793382678007887, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_NeverAutoSwitchControlSchemes

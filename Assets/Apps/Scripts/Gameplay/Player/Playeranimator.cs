@@ -30,7 +30,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private static readonly int SpeedParam = Animator.StringToHash("Speed");
     private static readonly int IsGroundedParam = Animator.StringToHash("IsGrounded");
-    private static readonly int JumpTrigger = Animator.StringToHash("Jump");
+    private static readonly int IsJumpingParam = Animator.StringToHash("IsJumping");
     private static readonly int PunchTrigger = Animator.StringToHash("Punch");
 
     private void Awake()
@@ -67,6 +67,13 @@ public class PlayerAnimator : MonoBehaviour
         float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
         animator.SetFloat(SpeedParam, horizontalSpeed);
         animator.SetBool(IsGroundedParam, playerController.IsGrounded);
+
+        // IsJumping is a Bool, not a Trigger, so it needs to be explicitly
+        // cleared on landing or it'll stay stuck true forever.
+        if (playerController.IsGrounded)
+        {
+            animator.SetBool(IsJumpingParam, false);
+        }
     }
 
     private void UpdateFacingDirection()
@@ -90,6 +97,6 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleJumped()
     {
-        animator.SetTrigger(JumpTrigger);
+        animator.SetBool(IsJumpingParam, true);
     }
 }

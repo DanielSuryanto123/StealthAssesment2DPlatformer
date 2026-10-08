@@ -1,95 +1,54 @@
 using UnityEngine;
 
-/// <summary>
-/// Bridges PlayerController/InputHandler state into the Animator.
-/// Attach this to the same GameObject as PlayerController, InputHandler,
-/// Rigidbody2D, SpriteRenderer, and Animator.
-///
-/// Required Animator Controller parameters:
-///   - Speed      (Float)  - drives Idle <-> Run transition
-///   - IsGrounded (Bool)   - drives Jump/Fall <-> Idle/Run transitions
-///   - Jump       (Trigger) - fired the instant a jump happens
-///   - Punch      (Trigger) - fired on Interact press (for the future
-///                            "attack contraption" animation)
-/// </summary>
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(InputHandler))]
 public class PlayerAnimator : MonoBehaviour
 {
-    [Header("References (auto-filled if left empty)")]
-    [SerializeField] private PlayerController playerController;
-    [SerializeField] private InputHandler inputHandler;
-    [SerializeField] private Rigidbody2D rb;
-
-    [Header("Tuning")]
-    [Tooltip("Horizontal speed below this counts as not moving, to avoid animation jitter from tiny float values.")]
-    [SerializeField] private float moveThreshold = 0.05f;
+    [SerializeField] private float runThreshold = 0.1f;
+    [SerializeField] private Transform graphics;
 
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
+    private PlayerController playerController;
+    private InputHandler inputHandler;
 
-    private static readonly int SpeedParam = Animator.StringToHash("Speed");
-    private static readonly int IsGroundedParam = Animator.StringToHash("IsGrounded");
-    private static readonly int JumpTrigger = Animator.StringToHash("Jump");
-    private static readonly int PunchTrigger = Animator.StringToHash("Punch");
+    private static readonly int IsRunningHash =
+        Animator.StringToHash("IsRunning");
+
+    private static readonly int IsJumpingHash =
+        Animator.StringToHash("IsJumping");
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        playerController = GetComponent<PlayerController>();
+        inputHandler = GetComponent<InputHandler>();
 
-        if (playerController == null) playerController = GetComponent<PlayerController>();
-        if (inputHandler == null) inputHandler = GetComponent<InputHandler>();
-        if (rb == null) rb = GetComponent<Rigidbody2D>();
-    }
-
-    private void OnEnable()
-    {
-        if (playerController != null)
-            playerController.Jumped += HandleJumped;
-    }
-
-    private void OnDisable()
-    {
-        if (playerController != null)
-            playerController.Jumped -= HandleJumped;
+        if (graphics == null)
+            graphics = transform;
     }
 
     private void Update()
     {
-        UpdateMovementParams();
-        UpdateFacingDirection();
-        UpdatePunchTrigger();
-    }
+        float moveX = inputHandler.MoveInput.x;
 
-    private void UpdateMovementParams()
-    {
-        float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
-        animator.SetFloat(SpeedParam, horizontalSpeed);
-        animator.SetBool(IsGroundedParam, playerController.IsGrounded);
-    }
+        bool isMoving = Mathf.Abs(moveX) > runThreshold;
+        bool isGrounded = playerController.IsGrounded;
 
-    private void UpdateFacingDirection()
-    {
-        if (Mathf.Abs(inputHandler.MoveInput.x) > moveThreshold)
+        animator.SetBool(IsRunningHash, isMoving && isGrounded);
+        animator.SetBool(IsJumpingHash, !isGrounded);
+
+        if (moveX < -runThreshold)
         {
-            // Assumes the sprite's default artwork faces right.
-            // Flip if your source art faces left instead.
-            spriteRenderer.flipX = inputHandler.MoveInput.x < 0f;
+            Vector3 scale = graphics.localScale;
+            scale.x = -Mathf.Abs(scale.x);
+            graphics.localScale = scale;
         }
-    }
-
-    private void UpdatePunchTrigger()
-    {
-        if (inputHandler.InteractPressed)
+        else if (moveX > runThreshold)
         {
-            animator.SetTrigger(PunchTrigger);
-            inputHandler.ResetInteract();
+            Vector3 scale = graphics.localScale;
+            scale.x = Mathf.Abs(scale.x);
+            graphics.localScale = scale;
         }
-    }
-
-    private void HandleJumped()
-    {
-        animator.SetTrigger(JumpTrigger);
     }
 }

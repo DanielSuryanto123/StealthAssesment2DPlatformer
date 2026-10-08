@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 1461438471135555706}
   - component: {fileID: 6641587145381814581}
   - component: {fileID: 2720220207305359679}
-  - component: {fileID: 4516793382678007887}
   - component: {fileID: 3346682603367693712}
   - component: {fileID: -8938052052633877917}
+  - component: {fileID: 7551672656720546148}
   m_Layer: 6
   m_Name: Cyborg
   m_TagString: Player2
@@ -174,36 +174,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be5ef6434df13a442807abec081b3ae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputHandler
---- !u!114 &4516793382678007887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4469128217926166573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: 0}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: 
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  moveLeftKey: 97
+  moveRightKey: 100
+  jumpKey: 119
+  pingKey: 113
+  interactKey: 102
 --- !u!70 &3346682603367693712
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -253,7 +228,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef137ec905e58644aaa6b951d146ad9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
-  playerController: {fileID: 0}
-  inputHandler: {fileID: 0}
-  rb: {fileID: 0}
-  moveThreshold: 0.05
+  runThreshold: 0.1
+  graphics: {fileID: 0}
+--- !u!114 &7551672656720546148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4469128217926166573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49e42e342e942c40ada515e15114566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  pingPrefab: {fileID: 0}
+  pingSpawnPoint: {fileID: 0}
+  pingCooldown: 3
+  pingLifetime: 1.5
+  moveSpeed: 5
+  jumpForce: 10

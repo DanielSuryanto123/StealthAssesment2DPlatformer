@@ -51,16 +51,13 @@ public class LaserHazard : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!IsActive) return;
+    if (!IsActive) return;
 
-        if (other.CompareTag("Player"))
+    if (other.CompareTag("Player1") || other.CompareTag("Player2"))
         {
-            // Hook your actual fail-state logic here, e.g.:
-            // other.GetComponent<PlayerHealth>()?.Die();
-            // or GameManager.Instance.RespawnPlayer(other.gameObject);
-            Debug.Log($"{other.name} hit an active laser hazard.");
+        other.GetComponent<PlayerRespawn>()?.Respawn();
         }
     }
 }

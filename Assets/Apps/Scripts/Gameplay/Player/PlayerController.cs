@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InputHandler))]
@@ -11,12 +10,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform pingSpawnPoint;
     [SerializeField] private float pingCooldown = 3f;
     [SerializeField] private float pingLifetime = 1.5f;
+
     private bool canPing = true;
     private float pingCooldownTimer = 0f;
 
-    // Exposed for UI (e.g. a cooldown ring around a ping button icon).
     public float PingCooldownProgress01 =>
-        pingCooldown <= 0f ? 1f : 1f - Mathf.Clamp01(pingCooldownTimer / pingCooldown);
+        pingCooldown <= 0f
+            ? 1f
+            : 1f - Mathf.Clamp01(pingCooldownTimer / pingCooldown);
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
@@ -29,7 +30,6 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     public bool IsGrounded => isGrounded;
-    public event Action Jumped;
 
     private void Awake()
     {
@@ -55,6 +55,12 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(DoPing());
             inputHandler.ResetPing();
         }
+
+        if (inputHandler.InteractPressed)
+        {
+            Interact();
+            inputHandler.ResetInteract();
+        }
     }
 
     private void FixedUpdate()
@@ -72,18 +78,27 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        Jumped?.Invoke();
+        rb.linearVelocity = new Vector2(
+            rb.linearVelocity.x,
+            jumpForce
+        );
+    }
+
+    private void Interact()
+    {
+        // Interaction logic will be added later.
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) isGrounded = true;
+        if (collision.gameObject.CompareTag("Ground"))
+            isGrounded = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) isGrounded = false;
+        if (collision.gameObject.CompareTag("Ground"))
+            isGrounded = false;
     }
 
     private IEnumerator DoPing()
@@ -93,21 +108,21 @@ public class PlayerController : MonoBehaviour
 
         if (pingPrefab != null)
         {
-            Vector3 spawnPos = pingSpawnPoint != null ? pingSpawnPoint.position : transform.position;
-            GameObject ping = Instantiate(pingPrefab, spawnPos, Quaternion.identity);
+            Vector3 spawnPos = pingSpawnPoint != null
+                ? pingSpawnPoint.position
+                : transform.position + Vector3.up;
 
-            PingIndicator indicator = ping.GetComponent<PingIndicator>();
-            if (indicator != null)
-            {
-                indicator.FollowTarget(pingSpawnPoint != null ? pingSpawnPoint : transform);
-            }
-            else
-            {
-                Destroy(ping, pingLifetime);
-            }
+            GameObject ping = Instantiate(
+                pingPrefab,
+                spawnPos,
+                Quaternion.identity
+            );
+
+            Destroy(ping, pingLifetime);
         }
 
         yield return new WaitForSeconds(pingCooldown);
+
         canPing = true;
     }
 }

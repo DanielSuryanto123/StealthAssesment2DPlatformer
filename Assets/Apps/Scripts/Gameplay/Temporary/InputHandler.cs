@@ -29,8 +29,10 @@ public class InputHandler : MonoBehaviour
         MoveInput = new Vector2(x, 0f);
 
         if (Input.GetKeyDown(jumpKey))
-            JumpPressed = true;
-
+    {
+        JumpPressed = true;
+        Debug.Log(gameObject.name + " received jump input: " + jumpKey);
+    }
         if (Input.GetKeyDown(pingKey))
             PingPressed = true;
 

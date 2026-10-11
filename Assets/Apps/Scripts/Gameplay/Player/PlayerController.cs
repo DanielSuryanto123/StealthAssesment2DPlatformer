@@ -78,9 +78,11 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        rb.linearVelocity = new Vector2(
-            rb.linearVelocity.x,
-            jumpForce
+    Debug.Log(gameObject.name + " is jumping");
+
+    rb.linearVelocity = new Vector2(
+        rb.linearVelocity.x,
+        jumpForce
         );
     }
 

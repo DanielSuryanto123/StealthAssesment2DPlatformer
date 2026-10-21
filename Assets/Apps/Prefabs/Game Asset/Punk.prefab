@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6334585358243379434}
   - component: {fileID: 846461819045096716}
   - component: {fileID: 4096896574300904867}
-  - component: {fileID: 1337963070221540417}
   - component: {fileID: 3698468313943547866}
   - component: {fileID: 6779874601757960784}
   - component: {fileID: 1575032734715902256}
@@ -147,21 +146,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1337963070221540417
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2807082090315733998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24681d52c6775ab42904e092eb790dc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LegacyPlayerController
-  moveSpeed: 5
-  jumpForce: 8
-  isPlayerOne: 0
 --- !u!114 &3698468313943547866
 MonoBehaviour:
   m_ObjectHideFlags: 0

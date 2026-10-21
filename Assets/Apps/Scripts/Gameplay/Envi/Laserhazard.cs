@@ -1,24 +1,13 @@
+
 using UnityEngine;
 
-/// <summary>
-/// A laser or trap hazard that can be remotely switched on/off — normally by a
-/// LeverController sitting in the OTHER player's area, for the cross-dependency
-/// rescue mechanic.
-///
-/// Setup:
-/// - Attach to the laser/trap GameObject.
-/// - Add a Collider2D set to "Is Trigger" covering the hazard's danger zone.
-/// - Make sure your Player prefabs are tagged "Player" (Unity's built-in tag)
-///   so this script can detect them.
-/// - Assign this component in a LeverController's "Linked Hazards" list.
-/// </summary>
 [RequireComponent(typeof(Collider2D))]
 public class LaserHazard : MonoBehaviour
 {
-    [Tooltip("Whether the hazard is dangerous when the level starts, before any lever has been touched.")]
+    [Header("Settings")]
     [SerializeField] private bool startsActive = true;
 
-    [Header("Visuals (optional)")]
+    [Header("Visuals")]
     [SerializeField] private SpriteRenderer laserVisual;
     [SerializeField] private GameObject laserVfx;
 
@@ -33,31 +22,36 @@ public class LaserHazard : MonoBehaviour
 
     private void Start()
     {
-        SetActive(startsActive);
+        ResetToStartState();
     }
 
     public void SetActive(bool active)
     {
         IsActive = active;
-        hazardCollider.enabled = active;
+
+        if (hazardCollider != null)
+            hazardCollider.enabled = active;
 
         if (laserVisual != null)
-        {
             laserVisual.enabled = active;
-        }
+
         if (laserVfx != null)
-        {
             laserVfx.SetActive(active);
-        }
     }
 
-private void OnTriggerEnter2D(Collider2D other)
+    public void ResetToStartState()
     {
-    if (!IsActive) return;
+        SetActive(startsActive);
+    }
 
-    if (other.CompareTag("Player1") || other.CompareTag("Player2"))
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!IsActive)
+            return;
+
+        if (other.CompareTag("Player1") || other.CompareTag("Player2"))
         {
-        other.GetComponent<PlayerRespawn>()?.Respawn();
+            other.GetComponent<PlayerRespawn>()?.Respawn();
         }
     }
 }

@@ -78,7 +78,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0
 --- !u!114 &5721434528675342556
 MonoBehaviour:
@@ -93,14 +93,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LeverController
   requiredPlayerTag: Player1
+  coopPuzzle: {fileID: -5288145735913482070, guid: 30062da4a48e3994c9ea05617cb1d305, type: 3}
   linkedHazards: []
-  oneWayDeactivateOnly: 1
+  deactivateHazardsOnUse: 1
   singleUse: 0
-  leverVisual: {fileID: 0}
-  leverOnSprite: {fileID: 0}
+  leverVisual: {fileID: 323427766803887504}
+  leverOnSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   leverOffSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
-  activationVfx: {fileID: 0}
   wrongColorFeedback: {fileID: 0}
+  activationVfx: {fileID: 0}
 --- !u!212 &323427766803887504
 SpriteRenderer:
   serializedVersion: 2

@@ -5,8 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class LeverController : MonoBehaviour
 {
+    public enum ActivationMode
+    {
+        SingleUse,
+        PermanentButton
+    }
+
     [Header("Player Access")]
     [SerializeField] private string requiredPlayerTag = "Player1";
+
+    [Header("Activation Mode")]
+    [SerializeField] private ActivationMode activationMode = ActivationMode.SingleUse;
 
     [Header("Co-op Puzzle")]
     [SerializeField] private CoopDoorController coopPuzzle;
@@ -41,7 +50,7 @@ public class LeverController : MonoBehaviour
 
     private void Update()
     {
-        if (singleUse && activated)
+        if (activated && (activationMode == ActivationMode.PermanentButton || singleUse))
             return;
 
         foreach (var entry in playersNearby)

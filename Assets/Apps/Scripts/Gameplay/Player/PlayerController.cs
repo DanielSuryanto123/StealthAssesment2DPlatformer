@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 
@@ -78,11 +79,11 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-    Debug.Log(gameObject.name + " is jumping");
+        Debug.Log(gameObject.name + " is jumping");
 
-    rb.linearVelocity = new Vector2(
-        rb.linearVelocity.x,
-        jumpForce
+        rb.linearVelocity = new Vector2(
+            rb.linearVelocity.x,
+            jumpForce
         );
     }
 

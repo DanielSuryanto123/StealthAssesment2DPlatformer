@@ -7,7 +7,8 @@ public class BlindSyncManager : MonoBehaviour
     [SerializeField] private float syncWindowSeconds = 2f;
     [SerializeField] private BlindSyncSwitch redSwitch;
     [SerializeField] private BlindSyncSwitch blueSwitch;
-
+    [SerializeField] private TargetGroupController targetGroupController;
+    
     [Header("Gate Visuals")]
     [SerializeField] private GameObject redGateVisual;
     [SerializeField] private GameObject blueGateVisual;
@@ -63,6 +64,8 @@ public class BlindSyncManager : MonoBehaviour
         if (redActivated && blueActivated)
         {
             completed = true;
+            if (targetGroupController != null)
+            targetGroupController.FocusOnBothPlayers();
             SetGateOpen(true);
             LogEvent("SYNC_ACTION", "SUCCESS");
         }

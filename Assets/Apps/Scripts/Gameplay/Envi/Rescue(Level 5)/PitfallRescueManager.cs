@@ -11,6 +11,7 @@ public class PitfallRescueManager : MonoBehaviour
     [SerializeField] private RescuePlatform rescuePlatform;
 
     private Transform trappedPlayer;
+    private Collider2D trappedPlayerCollider;
     private float trappedTime;
     private bool rescueStarted;
     private bool rescueCompleted;
@@ -18,6 +19,20 @@ public class PitfallRescueManager : MonoBehaviour
     public bool IsPlayerTrapped => rescueStarted && !rescueCompleted;
     public bool IsRescueCompleted => rescueCompleted;
     public Transform TrappedPlayer => trappedPlayer;
+
+    public bool IsTrappedPlayerOnPlatform()
+    {
+        if (trappedPlayerCollider == null || rescuePlatform == null)
+            return false;
+
+        Collider2D platformCollider =
+            rescuePlatform.GetComponent<Collider2D>();
+
+        if (platformCollider == null)
+            return false;
+
+        return trappedPlayerCollider.IsTouching(platformCollider);
+    }
 
     public void TrapPlayer(GameObject player)
     {
@@ -28,11 +43,19 @@ public class PitfallRescueManager : MonoBehaviour
             return;
 
         trappedPlayer = player.transform;
+        trappedPlayerCollider = player.GetComponent<Collider2D>();
+
+        if (trappedPlayerCollider == null)
+        {
+            Debug.LogError("PitfallRescueManager: Player2 needs a Collider2D.");
+            trappedPlayer = null;
+            return;
+        }
+
         trappedTime = Time.time;
         rescueStarted = true;
 
         LogEvent("RESCUE_START", 0f);
-
         Debug.Log("Player 2 is trapped. Player 1 must activate the rescue lever.");
     }
 
@@ -44,6 +67,12 @@ public class PitfallRescueManager : MonoBehaviour
         if (!IsPlayerTrapped || rescueCompleted)
             return;
 
+        if (!IsTrappedPlayerOnPlatform())
+        {
+            Debug.Log("Rescue unavailable: Player 2 is not on the rescue platform.");
+            return;
+        }
+
         if (rescuePlatform == null)
         {
             Debug.LogError("PitfallRescueManager: Rescue Platform is not assigned.");
@@ -54,7 +83,6 @@ public class PitfallRescueManager : MonoBehaviour
         rescueCompleted = true;
 
         LogEvent("RESCUE_TIME", rescueDuration);
-
         rescuePlatform.StartRescue(trappedPlayer);
     }
 

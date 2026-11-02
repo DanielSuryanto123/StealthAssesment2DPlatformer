@@ -1,46 +1,79 @@
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum EventType
+{
+    MOVE_START,
+    MOVE_STOP,
+    JUMP_SUCCESS,
+    JUMP_FAIL,
+    LEVEL_RESTART,
+    PULL_LEVER,
+    RELEASE_LEVER,
+    INVALID_INTERACT,
+    STEP_ON_BUTTON,
+    STEP_OFF_BUTTON,
+    PING_HELP,
+    PING_HERE,
+    SYNC_ACTION,
+    WAIT_PARTNER,
+    RESCUE_TIME,
+    HAZARD_ZONE_ENTERED
+}
+
+public enum PlayerID
+{
+    Player1,
+    Player2
+}
+
+[Serializable]
+public class Position
+{
+    public float x;
+    public float y;
+
+    public Position(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+[Serializable]
+public class TelemetryDataLog
+{
+    public float timestamp;
+    public string event_type;
+    public string player_id;
+    public Position player_pos;
+    public Position partner_pos;
+    public bool isTrapped;
+    public float duration;
+}
+
+[Serializable]
+public class TelemetryDataContainer
+{
+    public List<TelemetryDataLog> telemetryDataLogs =
+        new List<TelemetryDataLog>();
+}
 
 public class AnalyticsManager : MonoBehaviour
 {
     public static AnalyticsManager Instance { get; private set; }
 
-    [Serializable]
-    public class AnalyticsEvent
-    {
-        public string eventName;
-        public string playerId;
-        public string details;
-        public long timestampMs;
-        public long endTimestampMs;
-        public long durationMs;
-    }
+    [Header("Players")]
+    [SerializeField] private Transform player1;
+    [SerializeField] private Transform player2;
 
-    [Serializable]
-    private class EventList
-    {
-        public List<AnalyticsEvent> events;
+    [Header("Telemetry")]
+    [SerializeField] private bool logToConsole = true;
 
-        public EventList(List<AnalyticsEvent> events)
-        {
-            this.events = events;
-        }
-    }
-
-    private class ActiveEvent
-    {
-        public string eventName;
-        public string playerId;
-        public string details;
-        public long startTimestampMs;
-    }
-
-    public List<AnalyticsEvent> Events { get; private set; }
-        = new List<AnalyticsEvent>();
-
-    private readonly Dictionary<string, ActiveEvent> activeEvents
-        = new Dictionary<string, ActiveEvent>();
+    private TelemetryDataContainer telemetry =
+        new TelemetryDataContainer();
 
     private void Awake()
     {
@@ -51,86 +84,123 @@ public class AnalyticsManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    private long GetTimestampMs()
+    public void SetPlayers(Transform p1, Transform p2)
     {
-        return (long)(Time.timeAsDouble * 1000.0);
+        player1 = p1;
+        player2 = p2;
     }
 
-    public void LogInstantEvent(
-        string eventName,
-        string playerId,
-        string details = "")
+    public void LogEvent(
+        PlayerID playerID,
+        EventType eventType,
+        bool isTrapped = false,
+        float duration = 0f)
     {
-        long timestamp = GetTimestampMs();
-
-        Events.Add(new AnalyticsEvent
-        {
-            eventName = eventName,
-            playerId = playerId,
-            details = details,
-            timestampMs = timestamp,
-            endTimestampMs = timestamp,
-            durationMs = 0
-        });
-
-        Debug.Log(
-            $"[Analytics] {eventName} | Player: {playerId} | " +
-            $"Timestamp: {timestamp} ms | Duration: 0 ms | {details}"
+        Transform actor = GetPlayer(playerID);
+        Transform partner = GetPlayer(
+            playerID == PlayerID.Player1
+                ? PlayerID.Player2
+                : PlayerID.Player1
         );
-    }
 
-    public void BeginTimedEvent(
-        string eventKey,
-        string eventName,
-        string playerId,
-        string details = "")
-    {
-        if (activeEvents.ContainsKey(eventKey))
+        if (actor == null)
+        {
+            Debug.LogWarning(
+                $"AnalyticsManager: {playerID} is not assigned."
+            );
             return;
+        }
 
-        activeEvents.Add(eventKey, new ActiveEvent
+        TelemetryDataLog log = new TelemetryDataLog
         {
-            eventName = eventName,
-            playerId = playerId,
-            details = details,
-            startTimestampMs = GetTimestampMs()
-        });
+            timestamp = Time.time,
+            event_type = eventType.ToString(),
+            player_id = playerID.ToString(),
+            player_pos = new Position(
+                actor.position.x,
+                actor.position.y
+            ),
+            partner_pos = partner != null
+                ? new Position(partner.position.x, partner.position.y)
+                : new Position(0f, 0f),
+            isTrapped = isTrapped,
+            duration = UsesDuration(eventType)
+                ? Mathf.Max(0f, duration)
+                : 0f
+        };
+
+        telemetry.telemetryDataLogs.Add(log);
+
+        if (logToConsole)
+        {
+            Debug.Log(JsonUtility.ToJson(log));
+        }
     }
 
-    public void EndTimedEvent(string eventKey)
+    public void LogLeverPull(Transform actor)
     {
-        if (!activeEvents.TryGetValue(eventKey, out ActiveEvent active))
-            return;
-
-        long endTimestamp = GetTimestampMs();
-        long duration = Math.Max(
-            0,
-            endTimestamp - active.startTimestampMs
-        );
-
-        Events.Add(new AnalyticsEvent
+        if (TryGetPlayerID(actor, out PlayerID playerID))
         {
-            eventName = active.eventName,
-            playerId = active.playerId,
-            details = active.details,
-            timestampMs = active.startTimestampMs,
-            endTimestampMs = endTimestamp,
-            durationMs = duration
-        });
-
-        Debug.Log(
-            $"[Analytics] {active.eventName} | Player: {active.playerId} | " +
-            $"Timestamp: {active.startTimestampMs} ms | " +
-            $"Duration: {duration} ms | {active.details}"
-        );
-
-        activeEvents.Remove(eventKey);
+            LogEvent(playerID, EventType.PULL_LEVER);
+        }
     }
 
-    public string ExportJson()
+    public void LogHazardEntered(Transform actor, bool isTrapped)
     {
-        return JsonUtility.ToJson(new EventList(Events), true);
+        if (TryGetPlayerID(actor, out PlayerID playerID))
+        {
+            LogEvent(
+                playerID,
+                EventType.HAZARD_ZONE_ENTERED,
+                isTrapped
+            );
+        }
+    }
+
+    public string GetAllLogsAsJson()
+    {
+        return JsonUtility.ToJson(telemetry, true);
+    }
+
+    public int GetLogCount()
+    {
+        return telemetry.telemetryDataLogs.Count;
+    }
+
+    private Transform GetPlayer(PlayerID playerID)
+    {
+        return playerID == PlayerID.Player1
+            ? player1
+            : player2;
+    }
+
+    private bool TryGetPlayerID(
+        Transform actor,
+        out PlayerID playerID)
+    {
+        if (actor != null && actor.CompareTag("Player1"))
+        {
+            playerID = PlayerID.Player1;
+            return true;
+        }
+
+        if (actor != null && actor.CompareTag("Player2"))
+        {
+            playerID = PlayerID.Player2;
+            return true;
+        }
+
+        playerID = PlayerID.Player1;
+        return false;
+    }
+
+    private bool UsesDuration(EventType eventType)
+    {
+        return eventType == EventType.WAIT_PARTNER
+            || eventType == EventType.RESCUE_TIME
+            || eventType == EventType.LEVEL_RESTART;
     }
 }

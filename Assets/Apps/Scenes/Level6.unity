@@ -145,9 +145,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5366682}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bbcf1adf2adca140976347df7d7a6c5, type: 3}
+  m_Script: {fileID: 11500000, guid: 310bb1d8b27c54c4ab37fdf119b138e9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnalyticsManager
+  m_EditorClassIdentifier: Co-Lab.Telemetry::CoLab.Telemetry.AnalyticsManager
   player1: {fileID: 0}
   player2: {fileID: 0}
   logToConsole: 1

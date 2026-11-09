@@ -15,6 +15,7 @@ namespace CoLab.Telemetry
 
         public SessionDataModel(string sessionID, string studentIDP1, string studentIDP2)
         {
+            this.session_id = sessionID;
             this.student_id_p1 = studentIDP1;
             this.student_id_p2 = studentIDP2;
             this.raw_logs = new List<TelemetryDataModel>();

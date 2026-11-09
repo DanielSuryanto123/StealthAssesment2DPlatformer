@@ -1,20 +1,22 @@
-
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class RescueLever : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PitfallRescueManager rescueManager;
-    [SerializeField] private SpriteRenderer leverVisual;
-    [SerializeField] private Sprite leverOffSprite;
-    [SerializeField] private Sprite leverOnSprite;
 
     [Header("Interaction")]
     [SerializeField] private string requiredPlayerTag = "Player1";
 
-    private InputHandler nearbyInput;
-    private GameObject nearbyPlayer;
+    [Header("Visuals")]
+    [SerializeField] private SpriteRenderer leverVisual;
+    [SerializeField] private Sprite leverOffSprite;
+    [SerializeField] private Sprite leverOnSprite;
+
+    private readonly Dictionary<string, InputHandler> playersNearby = new();
+    private readonly Dictionary<string, GameObject> nearbyPlayers = new();
+
     private bool activated;
 
     private void Start()
@@ -24,52 +26,74 @@ public class RescueLever : MonoBehaviour
 
     private void Update()
     {
-        if (activated || nearbyInput == null || nearbyPlayer == null)
+        if (activated)
             return;
 
-        if (nearbyInput.InteractPressed)
+        if (!playersNearby.TryGetValue(requiredPlayerTag, out InputHandler input))
+            return;
+
+        if (input == null || !input.InteractPressed)
+            return;
+
+        if (!nearbyPlayers.TryGetValue(requiredPlayerTag, out GameObject player))
+            return;
+
+        if (rescueManager == null)
         {
-            if (rescueManager == null)
-            {
-                Debug.LogError("RescueLever: Rescue Manager is missing.");
-                return;
-            }
+            Debug.LogError("RescueLever: Rescue Manager is missing.");
+            return;
+        }
 
-            rescueManager.ActivateRescue(nearbyPlayer);
+        input.ResetInteract();
 
-            if (rescueManager.IsRescueCompleted)
-            {
-                activated = true;
-                SetVisual(true);
-            }
+        rescueManager.ActivateRescue(player);
+
+        if (rescueManager.IsRescueCompleted)
+        {
+            activated = true;
+            SetVisual(true);
+
+            Debug.Log(gameObject.name + " activated by " + requiredPlayerTag + ".");
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerInput playerInput = other.GetComponentInParent<PlayerInput>();
+        Transform playerRoot = other.transform.root;
+        string playerTag = playerRoot.tag;
 
-        if (playerInput == null)
+        if (playerTag != "Player1" && playerTag != "Player2")
             return;
 
-        GameObject player = playerInput.gameObject;
+        InputHandler input = playerRoot.GetComponent<InputHandler>();
 
-        if (!player.CompareTag(requiredPlayerTag))
+        if (input == null)
+            input = other.GetComponentInParent<InputHandler>();
+
+        if (input == null)
+        {
+            Debug.LogWarning(playerRoot.name + " has no InputHandler!");
             return;
+        }
 
-        nearbyPlayer = player;
-        nearbyInput = player.GetComponent<InputHandler>();
+        playersNearby[playerTag] = input;
+        nearbyPlayers[playerTag] = playerRoot.gameObject;
+
+        Debug.Log(playerRoot.name + " entered Rescue Lever. Tag: " + playerTag);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        PlayerInput playerInput = other.GetComponentInParent<PlayerInput>();
+        Transform playerRoot = other.transform.root;
+        string playerTag = playerRoot.tag;
 
-        if (playerInput == null || nearbyPlayer != playerInput.gameObject)
-            return;
+        if (playerTag == "Player1" || playerTag == "Player2")
+        {
+            playersNearby.Remove(playerTag);
+            nearbyPlayers.Remove(playerTag);
 
-        nearbyPlayer = null;
-        nearbyInput = null;
+            Debug.Log(playerRoot.name + " exited Rescue Lever.");
+        }
     }
 
     private void SetVisual(bool isOn)
@@ -82,4 +106,11 @@ public class RescueLever : MonoBehaviour
         else if (!isOn && leverOffSprite != null)
             leverVisual.sprite = leverOffSprite;
     }
+
+    public void ResetLever()
+    {
+        activated = false;
+        SetVisual(false);
+    }
 }
+

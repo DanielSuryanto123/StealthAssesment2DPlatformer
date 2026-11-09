@@ -1,4 +1,6 @@
 using UnityEngine;
+using CoLab.Telemetry;
+using EventType = CoLab.Telemetry.EventType;
 using System.Collections;
 
 public class Level7Button : MonoBehaviour
@@ -93,15 +95,8 @@ public class Level7Button : MonoBehaviour
 
     private void LogInvalidInteraction(GameObject actor)
     {
-        if (AnalyticsManager.Instance == null)
-            return;
-
-        PlayerID playerID = actor.CompareTag("Player1")
-            ? PlayerID.Player1
-            : PlayerID.Player2;
-
-        AnalyticsManager.Instance.LogEvent(
-            playerID,
+        AnalyticsManager.Instance?.LogEvent(
+            actor.transform,
             EventType.INVALID_INTERACT
         );
     }

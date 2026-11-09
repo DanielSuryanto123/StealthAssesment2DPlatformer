@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using CoLab.Telemetry;
 
 public class Level6HazardTelemetry : MonoBehaviour
 {

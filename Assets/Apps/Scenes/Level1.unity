@@ -203,41 +203,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &702594865 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2807082090315733998, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-  m_PrefabInstance: {fileID: 1818839281}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &702594876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702594865}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: e649c7eba8f50bc4e9fb8cf1ecb0a462, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard
-  m_DefaultActionMap: Player1
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &870940919
 GameObject:
   m_ObjectHideFlags: 0
@@ -4057,29 +4022,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2720220207305359679, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: moveLeftKey
-      value: 97
-      objectReference: {fileID: 0}
     - target: {fileID: 4469128217926166573, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_Name
       value: Cyborg
-      objectReference: {fileID: 0}
-    - target: {fileID: 4516793382678007887, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: m_Actions
-      value: 
-      objectReference: {fileID: -944628639613478452, guid: c4fdc098b18fea943b02e7a32769521d, type: 3}
-    - target: {fileID: 4516793382678007887, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4516793382678007887, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: m_DefaultActionMap
-      value: Player2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4516793382678007887, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: m_DefaultControlScheme
-      value: Gamepad Controller
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4087,7 +4032,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4095,7 +4040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4103,7 +4048,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalRotation.z
@@ -4115,27 +4060,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7551672656720546148, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: pingPrefab
-      value: 
-      objectReference: {fileID: 1981690553394480786, guid: 7585774738d89764fb0729fd3641d7f6, type: 3}
-    - target: {fileID: 7551672656720546148, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      propertyPath: pingSpawnPoint
-      value: 
-      objectReference: {fileID: 1332736967}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4469128217926166573, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1931854516}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f7a41be6678680478db270f120eef52, type: 3}
 --- !u!1 &1262719647
 GameObject:
@@ -4183,11 +4117,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1332736967 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-  m_PrefabInstance: {fileID: 1186435769}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1648508733
 GameObject:
   m_ObjectHideFlags: 0
@@ -4983,21 +4912,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 621154020683172428, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: m_DefaultControlScheme
-      value: Gamepad Controller
-      objectReference: {fileID: 0}
-    - target: {fileID: 846461819045096716, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: bb4a242c8137ed44aa3a2c447f81a8c6, type: 2}
     - target: {fileID: 1694547777940259312, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.55
+      value: -28.02
       objectReference: {fileID: 0}
     - target: {fileID: 1694547777940259312, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1694547777940259312, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5035,69 +4956,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Punk
       objectReference: {fileID: 0}
-    - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: jumpKey
-      value: 273
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: pingKey
-      value: 280
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: interactKey
-      value: 281
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: moveLeftKey
-      value: 276
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      propertyPath: moveRightKey
-      value: 275
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2807082090315733998, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 702594876}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
---- !u!1 &1931854506 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4469128217926166573, guid: 8f7a41be6678680478db270f120eef52, type: 3}
-  m_PrefabInstance: {fileID: 1186435769}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1931854516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1931854506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: c4fdc098b18fea943b02e7a32769521d, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Gamepad Controller
-  m_DefaultActionMap: Player2
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &2012639706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4324299458459810481, guid: b61d8057e60c0b84e989ac587dbb1d9e, type: 3}

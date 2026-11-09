@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 2522932515336598717}
   - component: {fileID: 1461438471135555706}
   - component: {fileID: 3346682603367693712}
-  - component: {fileID: 2720220207305359679}
   - component: {fileID: -8938052052633877917}
+  - component: {fileID: 2720220207305359679}
   - component: {fileID: 7551672656720546148}
+  - component: {fileID: 5774220752234883850}
   m_Layer: 6
   m_Name: Cyborg
   m_TagString: Player2
@@ -33,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.23, y: 0.55, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -183,6 +184,20 @@ CapsuleCollider2D:
   m_Offset: {x: -0.22, y: -0.15}
   m_Size: {x: 0.35, y: 0.7}
   m_Direction: 0
+--- !u!114 &-8938052052633877917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4469128217926166573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef137ec905e58644aaa6b951d146ad9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
+  runThreshold: 0.1
+  spriteRenderer: {fileID: 1062092241882297918}
 --- !u!114 &2720220207305359679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,22 +213,8 @@ MonoBehaviour:
   moveLeftKey: 97
   moveRightKey: 100
   jumpKey: 119
-  pingKey: 113
+  pingKey: 101
   interactKey: 102
---- !u!114 &-8938052052633877917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4469128217926166573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef137ec905e58644aaa6b951d146ad9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
-  runThreshold: 0.1
-  graphics: {fileID: 0}
 --- !u!114 &7551672656720546148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,9 +227,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e49e42e342e942c40ada515e15114566, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  pingPrefab: {fileID: 0}
-  pingSpawnPoint: {fileID: 0}
+  pingPrefab: {fileID: 1981690553394480786, guid: 7585774738d89764fb0729fd3641d7f6, type: 3}
+  pingSpawnPoint: {fileID: 5572155570895059542}
   pingCooldown: 3
   pingLifetime: 1.5
   moveSpeed: 5
   jumpForce: 10
+--- !u!114 &5774220752234883850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4469128217926166573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efce18d7b0a382548bd58eb1378c172a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFacing
+  spriteRenderer: {fileID: 1062092241882297918}
+  inputHandler: {fileID: 2720220207305359679}

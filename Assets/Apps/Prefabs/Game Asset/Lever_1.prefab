@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8395828534085447190}
   - component: {fileID: 5721434528675342556}
   - component: {fileID: 323427766803887504}
-  - component: {fileID: -852451848976933096}
   m_Layer: 0
   m_Name: Lever_1
   m_TagString: Untagged
@@ -163,17 +162,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &-852451848976933096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3960062507109037984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 425521c568e0fcf439b9faa35744789e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Level6LeverTelemetry
-  leverName: Lever_1
-  isActivated: 0

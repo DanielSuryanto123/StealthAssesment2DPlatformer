@@ -1,5 +1,7 @@
 
+using CoLab.Telemetry;
 using UnityEngine;
+using EventType = CoLab.Telemetry.EventType;
 
 public class CoopDoorController : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class CoopDoorController : MonoBehaviour
     private bool player2Activated;
     private bool puzzleCompleted;
     private float firstActivationTime;
+    private Transform firstActor;
 
     private void Start()
     {
@@ -30,12 +33,13 @@ public class CoopDoorController : MonoBehaviour
         if ((player1Activated || player2Activated) &&
             Time.time - firstActivationTime > activationWindowSeconds)
         {
+            LogSync(firstActor, EventType.SYNC_FAIL);
             ResetPuzzle();
             Debug.Log("Co-op puzzle timed out. Levers reset.");
         }
     }
 
-    public void RegisterLever(string playerTag, LeverController lever)
+    public void RegisterLever(string playerTag, LeverController lever, Transform actor = null)
     {
         if (puzzleCompleted || lever == null)
             return;
@@ -46,11 +50,17 @@ public class CoopDoorController : MonoBehaviour
         if (player1Activated || player2Activated)
         {
             if (Time.time - firstActivationTime > activationWindowSeconds)
+            {
+                LogSync(firstActor, EventType.SYNC_FAIL);
                 ResetPuzzle();
+            }
         }
 
         if (!player1Activated && !player2Activated)
+        {
             firstActivationTime = Time.time;
+            firstActor = actor;
+        }
 
         if (playerTag == "Player1")
         {
@@ -70,6 +80,7 @@ public class CoopDoorController : MonoBehaviour
         if (player1Activated && player2Activated)
         {
             puzzleCompleted = true;
+            LogSync(actor, EventType.SYNC_ACTION);
 
             if (door != null)
                 door.SetActive(false);
@@ -78,8 +89,22 @@ public class CoopDoorController : MonoBehaviour
         }
     }
 
+    private void LogSync(Transform actor, EventType type)
+    {
+        // Skip the Door prefab asset, and Level 4 where BlindSyncManager owns sync telemetry.
+        if (actor == null || !gameObject.scene.IsValid())
+            return;
+
+        if ((player1Lever != null && player1Lever.GetComponent<BlindSyncSwitch>() != null) ||
+            (player2Lever != null && player2Lever.GetComponent<BlindSyncSwitch>() != null))
+            return;
+
+        AnalyticsManager.Instance?.LogEvent(actor, type);
+    }
+
     private void ResetPuzzle()
     {
+        firstActor = null;
         player1Activated = false;
         player2Activated = false;
 

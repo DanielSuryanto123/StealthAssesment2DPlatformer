@@ -12,6 +12,9 @@ namespace CoLab.UI
         [SerializeField] private TMP_InputField player2IDInputField;
         private Button startGameButton;
 
+        // Raised only after the IDs passed validation and the analytics session was started.
+        public event Action SessionStarted;
+
         private new void Awake()
         {
             base.Awake();
@@ -34,6 +37,7 @@ namespace CoLab.UI
             }
             
             AnalyticsManager.Instance.StartSession(player1ID, player2ID);
+            SessionStarted?.Invoke();
         }
 
         private void OnEnable()

@@ -1,6 +1,8 @@
 
 using System.Collections.Generic;
+using CoLab.Telemetry;
 using UnityEngine;
+using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
 public class LeverController : MonoBehaviour
@@ -38,6 +40,14 @@ public class LeverController : MonoBehaviour
         new Dictionary<string, InputHandler>();
 
     private bool activated;
+    private bool telemetrySuppressed;
+    private Transform lastActor;
+
+    private const float InvalidInteractDebounceSeconds = 0.25f;
+    private readonly Dictionary<string, float> lastInvalidInteractTime =
+        new Dictionary<string, float>();
+
+    public event System.Action<Transform> Activated;
 
     public string RequiredPlayerTag => requiredPlayerTag;
     public bool IsActivated => activated;
@@ -45,13 +55,14 @@ public class LeverController : MonoBehaviour
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
+        // Level 4 levers are owned by BlindSyncManager, which logs its own events.
+        telemetrySuppressed = GetComponent<BlindSyncSwitch>() != null;
         UpdateVisual(false);
     }
 
     private void Update()
     {
-        if (activated && (activationMode == ActivationMode.PermanentButton || singleUse))
-            return;
+        bool lockedOut = activated && (activationMode == ActivationMode.PermanentButton || singleUse);
 
         foreach (var entry in playersNearby)
         {
@@ -62,6 +73,11 @@ public class LeverController : MonoBehaviour
 
             if (entry.Key != requiredPlayerTag)
             {
+                LogInvalidInteract(entry.Key, input.transform);
+
+                if (lockedOut)
+                    continue;
+
                 if (wrongColorFeedback != null)
                 {
                     Instantiate(
@@ -74,7 +90,10 @@ public class LeverController : MonoBehaviour
                 continue;
             }
 
-            ActivateLever();
+            if (lockedOut)
+                continue;
+
+            ActivateLever(input.transform);
             break;
         }
     }
@@ -111,12 +130,26 @@ public class LeverController : MonoBehaviour
             playersNearby.Remove(playerTag);
     }
 
-    private void ActivateLever()
+    private void LogInvalidInteract(string playerTag, Transform actor)
+    {
+        if (telemetrySuppressed)
+            return;
+
+        if (lastInvalidInteractTime.TryGetValue(playerTag, out float last) &&
+            Time.time - last < InvalidInteractDebounceSeconds)
+            return;
+
+        lastInvalidInteractTime[playerTag] = Time.time;
+        AnalyticsManager.Instance?.LogEvent(actor, EventType.INVALID_INTERACT);
+    }
+
+    public void ActivateLever(Transform actor)
     {
         if (activated)
             return;
 
         activated = true;
+        lastActor = actor;
         UpdateVisual(true);
 
         foreach (LaserHazard hazard in linkedHazards)
@@ -129,12 +162,22 @@ public class LeverController : MonoBehaviour
             Instantiate(activationVfx, transform.position, Quaternion.identity);
 
         if (coopPuzzle != null)
-            coopPuzzle.RegisterLever(requiredPlayerTag, this);
+            coopPuzzle.RegisterLever(requiredPlayerTag, this, actor);
+
+        if (!telemetrySuppressed)
+            AnalyticsManager.Instance?.LogEvent(actor, EventType.PULL_LEVER);
+
+        Activated?.Invoke(actor);
     }
 
     public void ResetLever()
     {
+        // RELEASE_LEVER: the lever the player pulled springs back after the co-op window timed out (never on success).
+        if (activated && !telemetrySuppressed && lastActor != null && gameObject.scene.IsValid())
+            AnalyticsManager.Instance?.LogEvent(lastActor, EventType.RELEASE_LEVER);
+
         activated = false;
+        lastActor = null;
         UpdateVisual(false);
 
         foreach (LaserHazard hazard in linkedHazards)

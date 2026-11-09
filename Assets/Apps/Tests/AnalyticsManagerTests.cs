@@ -143,6 +143,66 @@ namespace CoLab.Telemetry.Tests
             Assert.AreEqual(string.Empty, json);
         }
 
+        [Test]
+        public void LogEvent_MergesPlayerTrappedState_IntoIsTrapped()
+        {
+            var go1 = new GameObject("TestP1");
+            var go2 = new GameObject("TestP2");
+            try
+            {
+                _analyticsManager.SetPlayers(go1.transform, go2.transform);
+                _analyticsManager.StartSession("P1", "P2");
+
+                _analyticsManager.SetPlayerTrapped(PlayerID.PLAYER_1, true);
+                Assert.IsTrue(_analyticsManager.IsPlayerTrapped(PlayerID.PLAYER_1));
+                Assert.IsFalse(_analyticsManager.IsPlayerTrapped(PlayerID.PLAYER_2));
+
+                _analyticsManager.LogEvent(PlayerID.PLAYER_1, EventType.MOVE_START);
+                _analyticsManager.LogEvent(PlayerID.PLAYER_2, EventType.MOVE_START);
+
+                var sessionModel = GetPrivateField<SessionDataModel>(_analyticsManager, "_sessionDataModel");
+                Assert.AreEqual(2, sessionModel.raw_logs.Count);
+                Assert.IsTrue(sessionModel.raw_logs[0].isTrapped);
+                Assert.IsFalse(sessionModel.raw_logs[1].isTrapped);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go1);
+                Object.DestroyImmediate(go2);
+            }
+        }
+
+        [Test]
+        public void LogEvent_ZeroesDuration_ExceptForDurationEvents()
+        {
+            var go1 = new GameObject("TestP1");
+            var go2 = new GameObject("TestP2");
+            try
+            {
+                _analyticsManager.SetPlayers(go1.transform, go2.transform);
+                _analyticsManager.StartSession("P1", "P2");
+
+                _analyticsManager.LogEvent(PlayerID.PLAYER_1, EventType.MOVE_START, false, 5f);
+                _analyticsManager.LogEvent(PlayerID.PLAYER_1, EventType.WAIT_PARTNER, false, 5f);
+                _analyticsManager.LogEvent(PlayerID.PLAYER_1, EventType.RESCUE_TIME, false, 5f);
+                _analyticsManager.LogEvent(PlayerID.PLAYER_1, EventType.LEVEL_RESTART, false, 5f);
+
+                var logs = GetPrivateField<SessionDataModel>(_analyticsManager, "_sessionDataModel").raw_logs;
+                Assert.AreEqual(4, logs.Count);
+                Assert.AreEqual(0f, logs[0].duration);
+                Assert.AreEqual(5f, logs[1].duration);
+                Assert.AreEqual(5f, logs[2].duration);
+                Assert.AreEqual(5f, logs[3].duration);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go1);
+                Object.DestroyImmediate(go2);
+            }
+        }
+
+        // Memposting ke Supabase production, jadi dikategorikan "Network" (bisa di-exclude dari run offline/CI).
+        [Category("Network")]
         [UnityTest]
         public IEnumerator SendData_SuccessfullyPushesData()
         {

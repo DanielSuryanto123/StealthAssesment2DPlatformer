@@ -1,6 +1,8 @@
 
 using UnityEngine;
 using System.Collections;
+using CoLab.Telemetry;
+using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(InputHandler))]
@@ -32,6 +34,11 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded => isGrounded;
 
+    // True from the moment a jump leaves the ground until its outcome (landing or hazard) is logged.
+    private bool jumpInProgress;
+    // True after a hazard was entered until the player touches solid ground again or respawns.
+    private bool inHazard;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -60,6 +67,14 @@ public class PlayerController : MonoBehaviour
         if (inputHandler.InteractPressed)
         {
             Interact();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        // Cleared after every Update (InputHandler runs first) so all readers see InteractPressed for exactly one frame.
+        if (inputHandler.InteractPressed)
+        {
             inputHandler.ResetInteract();
         }
     }
@@ -85,6 +100,32 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity.x,
             jumpForce
         );
+
+        jumpInProgress = true;
+    }
+
+    /// <summary>Called by hazards when this player touches them. A jump in progress counts as failed.</summary>
+    public void NotifyHazardEntered()
+    {
+        inHazard = true;
+
+        if (jumpInProgress)
+        {
+            jumpInProgress = false;
+            LogEvent(EventType.JUMP_FAIL);
+        }
+    }
+
+    /// <summary>Clears jump/hazard state (used on respawn); no event is logged.</summary>
+    public void ResetJumpState()
+    {
+        jumpInProgress = false;
+        inHazard = false;
+    }
+
+    private void LogEvent(EventType eventType)
+    {
+        AnalyticsManager.Instance?.LogEvent(transform, eventType);
     }
 
     private void Interact()
@@ -94,6 +135,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.contactCount > 0 && collision.GetContact(0).normal.y > 0.5f)
+        {
+            inHazard = false;
+
+            if (jumpInProgress)
+            {
+                jumpInProgress = false;
+                LogEvent(EventType.JUMP_SUCCESS);
+            }
+        }
+
         if (collision.gameObject.CompareTag("Ground"))
             isGrounded = true;
     }
@@ -104,6 +156,17 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
     }
 
+    // Rule: a ping from a trapped player or one standing in a hazard asks for help (PING_HELP);
+    // any other ping points out a position / directs the partner (PING_HERE).
+    private EventType GetPingEventType()
+    {
+        bool trapped = AnalyticsManager.TryGetPlayerID(transform, out PlayerID id)
+                       && AnalyticsManager.Instance != null
+                       && AnalyticsManager.Instance.IsPlayerTrapped(id);
+
+        return trapped || inHazard ? EventType.PING_HELP : EventType.PING_HERE;
+    }
+
     private IEnumerator DoPing()
     {
         canPing = false;
@@ -111,6 +174,8 @@ public class PlayerController : MonoBehaviour
 
         if (pingPrefab != null)
         {
+            LogEvent(GetPingEventType());
+
             Vector3 spawnPos = pingSpawnPoint != null
                 ? pingSpawnPoint.position
                 : transform.position + Vector3.up;

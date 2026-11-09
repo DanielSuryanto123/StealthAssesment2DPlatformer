@@ -1,4 +1,5 @@
 using UnityEngine;
+using CoLab.Telemetry;
 
 public class Level6DeadzoneLever : MonoBehaviour
 {

@@ -1,5 +1,7 @@
 
 using UnityEngine;
+using CoLab.Telemetry;
+using EventType = CoLab.Telemetry.EventType;
 
 public class BlindSyncManager : MonoBehaviour
 {
@@ -19,6 +21,7 @@ public class BlindSyncManager : MonoBehaviour
     private bool blueActivated;
     private bool completed;
     private float firstActivationTime;
+    private string firstActivationTag;
 
     public bool IsCompleted => completed;
 
@@ -34,7 +37,7 @@ public class BlindSyncManager : MonoBehaviour
 
         if (Time.time - firstActivationTime > syncWindowSeconds)
         {
-            LogEvent("SYNC_FAIL", "TIMEOUT");
+            LogEvent(EventType.SYNC_FAIL, firstActivationTag);
             ResetPuzzle();
         }
     }
@@ -52,14 +55,17 @@ public class BlindSyncManager : MonoBehaviour
             return;
 
         if (!redActivated && !blueActivated)
+        {
             firstActivationTime = Time.time;
+            firstActivationTag = playerTag;
+        }
 
         if (playerTag == "Player1")
             redActivated = true;
         else
             blueActivated = true;
 
-        LogEvent("STEP_ON_BUTTON", playerTag);
+        LogEvent(EventType.STEP_ON_BUTTON, playerTag);
 
         if (redActivated && blueActivated)
         {
@@ -67,7 +73,7 @@ public class BlindSyncManager : MonoBehaviour
             if (targetGroupController != null)
             targetGroupController.FocusOnBothPlayers();
             SetGateOpen(true);
-            LogEvent("SYNC_ACTION", "SUCCESS");
+            LogEvent(EventType.SYNC_ACTION, playerTag);
         }
     }
 
@@ -101,9 +107,12 @@ public class BlindSyncManager : MonoBehaviour
             blueGateCollider.enabled = !open;
     }
 
-    private void LogEvent(string eventName, string detail)
+    private void LogEvent(EventType eventType, string playerTag)
     {
-        long timestampMs = (long)(Time.time * 1000f);
-        Debug.Log($"{eventName} | {detail} | {timestampMs} ms");
+        if (AnalyticsManager.Instance == null ||
+            !AnalyticsManager.TryGetPlayerID(playerTag, out PlayerID playerID))
+            return;
+
+        AnalyticsManager.Instance.LogEvent(playerID, eventType);
     }
 }

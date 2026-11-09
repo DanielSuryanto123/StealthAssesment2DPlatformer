@@ -22,17 +22,60 @@ namespace CoLab.Telemetry
         private Transform _player1;
         private Transform _player2;
 
+        private bool _player1Trapped;
+        private bool _player2Trapped;
+        private bool _subscribedToSceneLoaded;
+
         private void Awake()
         {
             SetInstance();
         }
-        
+
+        private void OnDestroy()
+        {
+            if (_subscribedToSceneLoaded)
+            {
+                SceneManager.sceneLoaded -= OnSceneLoaded;
+                _subscribedToSceneLoaded = false;
+            }
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // Status trapped tidak boleh terbawa ke level berikutnya.
+            _player1Trapped = false;
+            _player2Trapped = false;
+        }
+
+        /// <summary>
+        /// Menandai pemain sedang terjebak (mis. di pitfall/deadzone) sampai di-rescue.
+        /// LogEvent otomatis memakai status ini untuk field isTrapped.
+        /// </summary>
+        public void SetPlayerTrapped(PlayerID id, bool trapped)
+        {
+            if (id == PlayerID.PLAYER_1)
+            {
+                _player1Trapped = trapped;
+            }
+            else
+            {
+                _player2Trapped = trapped;
+            }
+        }
+
+        public bool IsPlayerTrapped(PlayerID id)
+        {
+            return id == PlayerID.PLAYER_1 ? _player1Trapped : _player2Trapped;
+        }
+
         private void SetInstance()
         {
             if (Instance is null)
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+                SceneManager.sceneLoaded += OnSceneLoaded;
+                _subscribedToSceneLoaded = true;
             }
             else
             {
@@ -125,7 +168,7 @@ namespace CoLab.Telemetry
 
             float loggedDuration = UsesDuration(eventType) ? Mathf.Max(0f, duration) : 0f;
 
-            Record(GetCurrentStage(), eventType, loggedDuration, playerId, playerPos, partnerPos, isTrapped);
+            Record(GetCurrentStage(), eventType, loggedDuration, playerId, playerPos, partnerPos, isTrapped || IsPlayerTrapped(playerId));
         }
 
         public void LogEvent(Transform actor, EventType eventType, bool isTrapped = false, float duration = 0f)

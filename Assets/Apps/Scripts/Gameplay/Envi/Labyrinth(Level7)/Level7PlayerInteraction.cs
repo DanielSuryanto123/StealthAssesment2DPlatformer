@@ -6,7 +6,7 @@ public class Level7PlayerInteraction : MonoBehaviour
     [Header("Interaction")]
     [SerializeField] private Transform interactionPoint;
     [SerializeField] private float interactionRadius = 1f;
-    [SerializeField] private LayerMask interactableLayer;
+    [SerializeField] private LayerMask interactableLayer = ~0;
 
     private InputHandler inputHandler;
 
@@ -21,7 +21,6 @@ public class Level7PlayerInteraction : MonoBehaviour
             return;
 
         TryInteract();
-        inputHandler.ResetInteract();
     }
 
     private void TryInteract()

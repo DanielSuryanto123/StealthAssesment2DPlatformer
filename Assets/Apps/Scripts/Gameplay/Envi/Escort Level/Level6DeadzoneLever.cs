@@ -1,5 +1,4 @@
 using UnityEngine;
-using CoLab.Telemetry;
 
 public class Level6DeadzoneLever : MonoBehaviour
 {
@@ -8,6 +7,32 @@ public class Level6DeadzoneLever : MonoBehaviour
     [SerializeField] private bool singleUse = true;
 
     private bool isActivated;
+    private LeverController leverController;
+
+    private void Awake()
+    {
+        leverController = GetComponent<LeverController>();
+    }
+
+    private void OnEnable()
+    {
+        if (leverController == null)
+            leverController = GetComponent<LeverController>();
+
+        if (leverController == null)
+        {
+            Debug.LogWarning(gameObject.name + ": Level6DeadzoneLever needs a sibling LeverController.");
+            return;
+        }
+
+        leverController.Activated += ActivateLever;
+    }
+
+    private void OnDisable()
+    {
+        if (leverController != null)
+            leverController.Activated -= ActivateLever;
+    }
 
     public void ActivateLever(Transform actor)
     {
@@ -25,12 +50,8 @@ public class Level6DeadzoneLever : MonoBehaviour
 
         isActivated = true;
 
-        targetDeadzone.ReleasePlayer();
-
-        if (AnalyticsManager.Instance != null)
-        {
-            AnalyticsManager.Instance.LogLeverPull(transform);
-        }
+        // PULL_LEVER is logged once by the sibling LeverController.
+        targetDeadzone.ReleasePlayer(actor);
 
         Debug.Log(gameObject.name + " activated by Player2.");
     }

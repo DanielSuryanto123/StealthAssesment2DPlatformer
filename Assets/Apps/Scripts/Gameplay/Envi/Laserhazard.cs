@@ -1,5 +1,7 @@
 
 using UnityEngine;
+using CoLab.Telemetry;
+using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
 public class LaserHazard : MonoBehaviour
@@ -51,7 +53,12 @@ public class LaserHazard : MonoBehaviour
 
         if (other.CompareTag("Player1") || other.CompareTag("Player2"))
         {
-            other.GetComponent<PlayerRespawn>()?.Respawn();
+            AnalyticsManager.Instance?.LogHazardEntered(other.transform, true);
+            other.GetComponent<PlayerController>()?.NotifyHazardEntered();
+
+            PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+            respawn?.NotifyHazard();
+            respawn?.Respawn();
         }
     }
 }

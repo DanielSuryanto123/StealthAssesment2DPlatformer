@@ -410,7 +410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level7Button
   buttonID: 2
   allowedPlayer: 0
-  sequenceManager: {fileID: 0}
+  sequenceManager: {fileID: 1602943997}
   targetDoor: {fileID: 0}
   buttonVisual: {fileID: 525410863}
   normalSprite: {fileID: 0}
@@ -600,7 +600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level7Button
   buttonID: 3
   allowedPlayer: 0
-  sequenceManager: {fileID: 0}
+  sequenceManager: {fileID: 1602943997}
   targetDoor: {fileID: 0}
   buttonVisual: {fileID: 623192755}
   normalSprite: {fileID: 0}
@@ -7368,7 +7368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level7Button
   buttonID: 1
   allowedPlayer: 0
-  sequenceManager: {fileID: 0}
+  sequenceManager: {fileID: 1602943997}
   targetDoor: {fileID: 0}
   buttonVisual: {fileID: 1138564251}
   normalSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}

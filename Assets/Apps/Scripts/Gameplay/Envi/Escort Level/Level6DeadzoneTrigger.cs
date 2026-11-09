@@ -1,5 +1,6 @@
 using UnityEngine;
 using CoLab.Telemetry;
+using EventType = CoLab.Telemetry.EventType;
 
 public class Level6DeadzoneTrigger : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class Level6DeadzoneTrigger : MonoBehaviour
     private Rigidbody2D trappedRb;
     private float trappedStartTime;
     private bool isTrapped;
+    private PlayerID trappedId;
+    private bool hasTrappedId;
 
     public bool IsTrapped => isTrapped;
 
@@ -32,6 +35,9 @@ public class Level6DeadzoneTrigger : MonoBehaviour
         trappedStartTime = Time.time;
 
         trappedRb.linearVelocity = Vector2.zero;
+
+        // Must run before the controller is disabled so a jump in progress resolves as JUMP_FAIL.
+        trappedPlayer.NotifyHazardEntered();
         trappedPlayer.enabled = false;
 
         if (AnalyticsManager.Instance != null)
@@ -40,12 +46,25 @@ public class Level6DeadzoneTrigger : MonoBehaviour
                 other.transform,
                 true
             );
+
+            AnalyticsManager.Instance.LogEvent(
+                other.transform,
+                EventType.RESCUE_START,
+                true
+            );
+
+            if (AnalyticsManager.TryGetPlayerID(other.transform, out PlayerID victimId))
+            {
+                trappedId = victimId;
+                hasTrappedId = true;
+                AnalyticsManager.Instance.SetPlayerTrapped(victimId, true);
+            }
         }
 
         Debug.Log(other.name + " is trapped at " + deadzoneName);
     }
 
-    public void ReleasePlayer()
+    public void ReleasePlayer(Transform rescuer = null)
     {
         if (!isTrapped)
             return;
@@ -58,6 +77,23 @@ public class Level6DeadzoneTrigger : MonoBehaviour
         if (trappedPlayer != null)
             trappedPlayer.enabled = true;
 
+        if (rescuer != null)
+        {
+            AnalyticsManager.Instance?.LogEvent(
+                rescuer,
+                EventType.RESCUE_TIME,
+                false,
+                rescueDuration
+            );
+        }
+        else
+        {
+            Debug.LogWarning(deadzoneName + ": ReleasePlayer called without a rescuer; RESCUE_TIME not logged.");
+        }
+
+        if (hasTrappedId)
+            AnalyticsManager.Instance?.SetPlayerTrapped(trappedId, false);
+
         Debug.Log(
             "Player rescued from " + deadzoneName +
             ". Rescue duration: " + rescueDuration + " seconds."
@@ -66,5 +102,6 @@ public class Level6DeadzoneTrigger : MonoBehaviour
         isTrapped = false;
         trappedPlayer = null;
         trappedRb = null;
+        hasTrappedId = false;
     }
 }

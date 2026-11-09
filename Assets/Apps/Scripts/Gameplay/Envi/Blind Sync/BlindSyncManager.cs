@@ -79,6 +79,15 @@ public class BlindSyncManager : MonoBehaviour
 
     public void ResetPuzzle()
     {
+        // STEP_OFF_BUTTON: each switch a player had pressed is released when the sync window fails (not on success).
+        if (!completed)
+        {
+            if (redActivated)
+                LogEvent(EventType.STEP_OFF_BUTTON, "Player1");
+            if (blueActivated)
+                LogEvent(EventType.STEP_OFF_BUTTON, "Player2");
+        }
+
         redActivated = false;
         blueActivated = false;
 

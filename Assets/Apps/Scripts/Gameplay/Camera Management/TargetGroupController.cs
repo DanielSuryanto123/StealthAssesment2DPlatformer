@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
@@ -7,41 +6,94 @@ using UnityEngine.InputSystem;
 
 public class TargetGroupController : MonoBehaviour
 {
-    private Transform[] _players;
-    private CinemachineTargetGroup _targetGroup;
+    [Header("Target Group")]
+    [SerializeField] private CinemachineTargetGroup targetGroup;
+
+    [Header("Player Weights")]
+    [SerializeField] private float normalWeight = 1f;
+    [SerializeField] private float focusedWeight = 8f;
+    [SerializeField] private float targetRadius = 1f;
+
+    private Transform[] players;
+    private Transform focusedPlayer;
 
     private void Awake()
     {
-        _targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
+        if (targetGroup == null)
+            targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
     }
 
     private void Start()
     {
-        _players = GetActivePlayers().ToArray();
+        players = GetActivePlayers().ToArray();
 
-        AssignPlayersToTarget();
-        Debug.Log(_players.Length);
+        if (targetGroup == null)
+        {
+            Debug.LogError("TargetGroupController: CinemachineTargetGroup is missing.");
+            return;
+        }
+
+        if (players.Length == 0)
+        {
+            Debug.LogError("TargetGroupController: No PlayerInput objects found.");
+            return;
+        }
+
+        foreach (Transform player in players)
+        {
+            if (player != null && targetGroup.FindMember(player) == -1)
+                targetGroup.AddMember(player, normalWeight, targetRadius);
+        }
+
+        FocusOnBothPlayers();
+
+        Debug.Log($"TargetGroupController found {players.Length} players.");
     }
 
-    private void AssignPlayersToTarget()
+    public void FocusOnPlayer(Transform player)
     {
-        for (int i = 0; i < _players.Length; i++)
+        if (targetGroup == null || player == null)
+            return;
+
+        focusedPlayer = player;
+        UpdateTargetWeights();
+    }
+
+    public void FocusOnBothPlayers()
+    {
+        focusedPlayer = null;
+        UpdateTargetWeights();
+    }
+
+    private void UpdateTargetWeights()
+    {
+        if (targetGroup == null || players == null)
+            return;
+
+        foreach (Transform player in players)
         {
-            _targetGroup.AddMember(_players[i], 1, 1);
-            // _targetGroup.m_Targets[i].target = _players[i];
+            if (player == null)
+                continue;
+
+            int index = targetGroup.FindMember(player);
+
+            if (index < 0)
+                continue;
+
+            CinemachineTargetGroup.Target target = targetGroup.m_Targets[index];
+
+            target.weight = focusedPlayer == null || player == focusedPlayer
+                ? (focusedPlayer == null ? normalWeight : focusedWeight)
+                : 0f;
+
+            targetGroup.m_Targets[index] = target;
         }
     }
 
     public List<Transform> GetActivePlayers()
     {
-        var playerInputs = FindObjectsByType<PlayerInput>();
-        List<Transform> playersTransform = new List<Transform>();
-        
-        foreach (PlayerInput input in playerInputs)
-        {
-            playersTransform.Add(input.transform);
-        }
-
-        return playersTransform;
+        return FindObjectsByType<PlayerInput>()
+            .Select(input => input.transform)
+            .ToList();
     }
 }

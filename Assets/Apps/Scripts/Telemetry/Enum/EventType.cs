@@ -4,7 +4,7 @@
     {
         // Aksi Navigasi Dasar
         MOVE_START,
-        MOVE_STOP, 
+        MOVE_STOP,
         JUMP_SUCCESS,
         JUMP_FAIL,
         LEVEL_RESTART, // untuk metrik Ketekunan (Perseverance)
@@ -22,7 +22,12 @@
 
         // Aksi Logika Otomatis dari Sistem (Stealth Assessment)
         SYNC_ACTION,   // P1 dan P2 menginjak tombol dengan selisih waktu <= 0.5 detik
+        SYNC_FAIL,     // Jendela sinkronisasi habis sebelum partner menginjak tombol
         WAIT_PARTNER,  // Satu pemain diam > 3 detik saat partnernya bergerak
-        RESCUE_TIME    // Durasi dari saat partner terjebak hingga tuas penyelamat ditarik
+        RESCUE_START,  // Pemain jatuh/terjebak, awal hitungan RESCUE_TIME
+        RESCUE_TIME,   // Durasi dari saat partner terjebak hingga tuas penyelamat ditarik
+
+        // Aksi Hazard
+        HAZARD_ZONE_ENTERED // pemain masuk zona bahaya (Level 6)
     }
 }

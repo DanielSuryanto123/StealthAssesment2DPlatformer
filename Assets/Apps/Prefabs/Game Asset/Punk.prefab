@@ -13,10 +13,9 @@ GameObject:
   - component: {fileID: 846461819045096716}
   - component: {fileID: 4096896574300904867}
   - component: {fileID: 6779874601757960784}
-  - component: {fileID: 1575032734715902256}
   - component: {fileID: 3698468313943547866}
+  - component: {fileID: 1575032734715902256}
   - component: {fileID: 1082287985015807978}
-  - component: {fileID: 6752552004248952882}
   m_Layer: 3
   m_Name: Punk
   m_TagString: Player1
@@ -34,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.2, y: 0.55, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -108,7 +107,7 @@ Animator:
   m_GameObject: {fileID: 2807082090315733998}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bb4a242c8137ed44aa3a2c447f81a8c6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 59b00ae5418078c43a5d2a3630ffdb08, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -184,6 +183,23 @@ CapsuleCollider2D:
   m_Offset: {x: -0.22, y: -0.15}
   m_Size: {x: 0.35, y: 0.7}
   m_Direction: 0
+--- !u!114 &3698468313943547866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2807082090315733998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5ef6434df13a442807abec081b3ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputHandler
+  moveLeftKey: 97
+  moveRightKey: 100
+  jumpKey: 119
+  pingKey: 113
+  interactKey: 102
 --- !u!114 &1575032734715902256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,24 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
   runThreshold: 0.1
-  spriteRenderer: {fileID: 6334585358243379434}
---- !u!114 &3698468313943547866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2807082090315733998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be5ef6434df13a442807abec081b3ae1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InputHandler
-  moveLeftKey: 276
-  moveRightKey: 275
-  jumpKey: 273
-  pingKey: 281
-  interactKey: 280
+  graphics: {fileID: 0}
 --- !u!114 &1082287985015807978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,17 +232,3 @@ MonoBehaviour:
   pingLifetime: 1.5
   moveSpeed: 5
   jumpForce: 10
---- !u!114 &6752552004248952882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2807082090315733998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efce18d7b0a382548bd58eb1378c172a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerFacing
-  spriteRenderer: {fileID: 6334585358243379434}
-  inputHandler: {fileID: 3698468313943547866}

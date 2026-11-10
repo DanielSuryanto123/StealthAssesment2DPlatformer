@@ -10,8 +10,8 @@ public class BlindSyncSwitch : MonoBehaviour
 
     [Header("Visuals")]
     [SerializeField] private SpriteRenderer switchRenderer;
-    [SerializeField] private Sprite offSprite;
-    [SerializeField] private Sprite onSprite;
+    [SerializeField] private Color inactiveColor = Color.gray;
+    [SerializeField] private Color activeColor = Color.green;
 
     private readonly Dictionary<string, InputHandler> playersNearby = new();
     private bool activated;
@@ -29,51 +29,35 @@ public class BlindSyncSwitch : MonoBehaviour
         if (playersNearby.TryGetValue(requiredPlayerTag, out InputHandler input) &&
             input != null && input.InteractPressed)
         {
-            input.ResetInteract();
-
             activated = true;
             UpdateVisual();
-
             syncManager.RegisterSwitch(requiredPlayerTag);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
-{
-    Transform playerRoot = other.transform.root;
-
-    string playerTag = playerRoot.tag;
-
-    if (playerTag != "Player1" && playerTag != "Player2")
-        return;
-
-    InputHandler input = playerRoot.GetComponent<InputHandler>();
-
-    if (input == null)
-        input = other.GetComponentInParent<InputHandler>();
-
-    if (input == null)
     {
-        Debug.LogWarning(playerRoot.name + " has no InputHandler!");
-        return;
+        InputHandler input = other.GetComponent<InputHandler>();
+
+        if (input == null)
+            input = other.GetComponentInParent<InputHandler>();
+
+        if (input == null)
+            return;
+
+        if (other.CompareTag("Player1"))
+            playersNearby["Player1"] = input;
+        else if (other.CompareTag("Player2"))
+            playersNearby["Player2"] = input;
     }
 
-    playersNearby[playerTag] = input;
-
-    Debug.Log(playerRoot.name + " entered switch. Tag: " + playerTag);
-}
-
-private void OnTriggerExit2D(Collider2D other)
-{
-    Transform playerRoot = other.transform.root;
-    string playerTag = playerRoot.tag;
-
-    if (playerTag == "Player1" || playerTag == "Player2")
+    private void OnTriggerExit2D(Collider2D other)
     {
-        playersNearby.Remove(playerTag);
-        Debug.Log(playerRoot.name + " exited switch.");
+        if (other.CompareTag("Player1"))
+            playersNearby.Remove("Player1");
+        else if (other.CompareTag("Player2"))
+            playersNearby.Remove("Player2");
     }
-}
 
     public void ResetSwitch()
     {
@@ -81,17 +65,9 @@ private void OnTriggerExit2D(Collider2D other)
         UpdateVisual();
     }
 
-    public void LockSwitch()
-    {
-        activated = true;
-        UpdateVisual();
-    }
-
     private void UpdateVisual()
     {
-        if (switchRenderer == null)
-            return;
-
-        switchRenderer.sprite = activated ? onSprite : offSprite;
+        if (switchRenderer != null)
+            switchRenderer.color = activated ? activeColor : inactiveColor;
     }
 }

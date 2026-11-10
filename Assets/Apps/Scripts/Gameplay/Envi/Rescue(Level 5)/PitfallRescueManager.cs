@@ -1,7 +1,5 @@
 
 using UnityEngine;
-using CoLab.Telemetry;
-using EventType = CoLab.Telemetry.EventType;
 
 public class PitfallRescueManager : MonoBehaviour
 {
@@ -57,7 +55,7 @@ public class PitfallRescueManager : MonoBehaviour
         trappedTime = Time.time;
         rescueStarted = true;
 
-        LogEvent(trappedPlayerTag, EventType.RESCUE_START, true, 0f);
+        LogEvent("RESCUE_START", 0f);
         Debug.Log("Player 2 is trapped. Player 1 must activate the rescue lever.");
     }
 
@@ -84,22 +82,17 @@ public class PitfallRescueManager : MonoBehaviour
         float rescueDuration = Time.time - trappedTime;
         rescueCompleted = true;
 
-        LogEvent(rescuerPlayerTag, EventType.RESCUE_TIME, false, rescueDuration);
+        LogEvent("RESCUE_TIME", rescueDuration);
         rescuePlatform.StartRescue(trappedPlayer);
     }
 
-    private void LogEvent(
-        string playerTag,
-        EventType eventType,
-        bool isTrapped,
-        float durationSeconds)
+    private void LogEvent(string eventName, float durationSeconds)
     {
-        if (AnalyticsManager.Instance == null ||
-            !AnalyticsManager.TryGetPlayerID(playerTag, out PlayerID playerID))
-            return;
+        long timestampMs = (long)(Time.time * 1000f);
+        long durationMs = (long)(durationSeconds * 1000f);
 
-        AnalyticsManager.Instance.LogEvent(
-            playerID, eventType, isTrapped, durationSeconds
+        Debug.Log(
+            $"{eventName} | Duration: {durationMs} ms | Timestamp: {timestampMs} ms"
         );
     }
 }

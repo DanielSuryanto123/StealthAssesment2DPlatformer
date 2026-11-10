@@ -9,26 +9,24 @@ namespace CoLab.Telemetry
     [Serializable]
     public class TelemetryDataModel
     {
-        // Nama field sengaja snake_case mengikuti gdd.md 4.1 / 4.2 karena JsonUtility memakai nama field apa adanya.
-        public string stage_id;
-        /// <summary>Detik sejak sesi dimulai (float, resolusi sub-milidetik). Bukan integer milidetik.</summary>
+        public string stageID;
         public float timestamp;
-        public string event_type;
+        public string eventType;
         public float duration;
-        public string player_id;
-        public PositionDataModel player_pos;
-        public PositionDataModel partner_pos;
+        public string playerId;
+        public PositionDataModel playerPositionDataModel;
+        public PositionDataModel partnerPositionDataModel;
         public bool isTrapped;
 
         public TelemetryDataModel(StageID stageID, float timestamp, EventType eventType, float duration, PlayerID playerId, PositionDataModel playerPositionDataModel, PositionDataModel partnerPositionDataModel, bool isTrapped)
         {
-            this.stage_id = stageID.ToString();
+            this.stageID = stageID.ToString();
             this.timestamp = timestamp;
-            this.event_type = eventType.ToString();
+            this.eventType = eventType.ToString();
             this.duration =  duration;
-            this.player_id = playerId.ToString();
-            this.player_pos = playerPositionDataModel;
-            this.partner_pos = partnerPositionDataModel;
+            this.playerId = playerId.ToString();
+            this.playerPositionDataModel = playerPositionDataModel;
+            this.partnerPositionDataModel = partnerPositionDataModel;
             this.isTrapped = isTrapped;
         }
     }

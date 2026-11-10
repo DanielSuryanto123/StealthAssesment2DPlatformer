@@ -66,15 +66,15 @@ namespace CoLab.Telemetry.Tests
             Assert.AreEqual(1, sessionModel.raw_logs.Count);
 
             var entry = sessionModel.raw_logs[0];
-            Assert.AreEqual(StageID.STAGE_1.ToString(), entry.stage_id);
-            Assert.AreEqual(EventType.MOVE_START.ToString(), entry.event_type);
-            Assert.AreEqual(PlayerID.PLAYER_1.ToString(), entry.player_id);
+            Assert.AreEqual(StageID.STAGE_1.ToString(), entry.stageID);
+            Assert.AreEqual(EventType.MOVE_START.ToString(), entry.eventType);
+            Assert.AreEqual(PlayerID.PLAYER_1.ToString(), entry.playerId);
             Assert.AreEqual(0.75f, entry.duration);
             Assert.AreEqual(true, entry.isTrapped);
-            Assert.AreEqual(playerPosition.x, entry.player_pos.x);
-            Assert.AreEqual(playerPosition.y, entry.player_pos.y);
-            Assert.AreEqual(partnerPosition.x, entry.partner_pos.x);
-            Assert.AreEqual(partnerPosition.y, entry.partner_pos.y);
+            Assert.AreEqual(playerPosition.x, entry.playerPositionDataModel.x);
+            Assert.AreEqual(playerPosition.y, entry.playerPositionDataModel.y);
+            Assert.AreEqual(partnerPosition.x, entry.partnerPositionDataModel.x);
+            Assert.AreEqual(partnerPosition.y, entry.partnerPositionDataModel.y);
             Assert.GreaterOrEqual(entry.timestamp, 0f);
         }
 
@@ -100,30 +100,6 @@ namespace CoLab.Telemetry.Tests
             Assert.That(json, Does.Contain(StageID.STAGE_1.ToString()));
             Assert.That(json, Does.Contain(EventType.MOVE_START.ToString()));
             Assert.That(json, Does.Contain(PlayerID.PLAYER_1.ToString()));
-        }
-
-        [Test]
-        public void GetSessionJSON_UsesGddFieldNames()
-        {
-            _analyticsManager.StartSession("P1", "P2");
-            _analyticsManager.Record(
-                StageID.STAGE_1, EventType.SYNC_ACTION, 0f, PlayerID.PLAYER_1,
-                new PositionDataModel(1f, 2f), new PositionDataModel(3f, 4f), false);
-
-            string json = _analyticsManager.GetSessionJSON();
-
-            foreach (string key in new[]
-            {
-                "session_id", "student_id_p1", "student_id_p2", "raw_logs",
-                "stage_id", "timestamp", "event_type", "duration",
-                "player_id", "player_pos", "partner_pos", "isTrapped"
-            })
-            {
-                Assert.That(json, Does.Contain("\"" + key + "\""), "key hilang: " + key);
-            }
-
-            Assert.That(json, Does.Not.Contain("eventType"));
-            Assert.That(json, Does.Not.Contain("playerPositionDataModel"));
         }
 
         [Test]

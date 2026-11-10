@@ -1,7 +1,5 @@
 
 using UnityEngine;
-using CoLab.Telemetry;
-using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(InputHandler))]
 public class Level6WaitTracker : MonoBehaviour
@@ -24,11 +22,11 @@ public class Level6WaitTracker : MonoBehaviour
 
         if (CompareTag("Player1"))
         {
-            playerID = PlayerID.PLAYER_1;
+            playerID = PlayerID.Player1;
         }
         else if (CompareTag("Player2"))
         {
-            playerID = PlayerID.PLAYER_2;
+            playerID = PlayerID.Player2;
         }
         else
         {
@@ -50,7 +48,7 @@ public class Level6WaitTracker : MonoBehaviour
             );
         }
 
-        string partnerTag = playerID == PlayerID.PLAYER_1
+        string partnerTag = playerID == PlayerID.Player1
             ? "Player2"
             : "Player1";
 

@@ -1,7 +1,5 @@
 
 using UnityEngine;
-using CoLab.Telemetry;
-using EventType = CoLab.Telemetry.EventType;
 
 public class BlindSyncManager : MonoBehaviour
 {
@@ -10,15 +8,17 @@ public class BlindSyncManager : MonoBehaviour
     [SerializeField] private BlindSyncSwitch redSwitch;
     [SerializeField] private BlindSyncSwitch blueSwitch;
     [SerializeField] private TargetGroupController targetGroupController;
-
-    [Header("Shared Gate")]
-    [SerializeField] private GameObject sharedGate;
+    
+    [Header("Gate Visuals")]
+    [SerializeField] private GameObject redGateVisual;
+    [SerializeField] private GameObject blueGateVisual;
+    [SerializeField] private Collider2D redGateCollider;
+    [SerializeField] private Collider2D blueGateCollider;
 
     private bool redActivated;
     private bool blueActivated;
     private bool completed;
     private float firstActivationTime;
-    private string firstActivationTag;
 
     public bool IsCompleted => completed;
 
@@ -34,7 +34,7 @@ public class BlindSyncManager : MonoBehaviour
 
         if (Time.time - firstActivationTime > syncWindowSeconds)
         {
-            LogEvent(EventType.SYNC_FAIL, firstActivationTag);
+            LogEvent("SYNC_FAIL", "TIMEOUT");
             ResetPuzzle();
         }
     }
@@ -52,33 +52,22 @@ public class BlindSyncManager : MonoBehaviour
             return;
 
         if (!redActivated && !blueActivated)
-        {
             firstActivationTime = Time.time;
-            firstActivationTag = playerTag;
-        }
 
         if (playerTag == "Player1")
             redActivated = true;
         else
             blueActivated = true;
 
-        LogEvent(EventType.STEP_ON_BUTTON, playerTag);
+        LogEvent("STEP_ON_BUTTON", playerTag);
 
         if (redActivated && blueActivated)
         {
             completed = true;
-
-            if (redSwitch != null)
-                redSwitch.LockSwitch();
-
-            if (blueSwitch != null)
-                blueSwitch.LockSwitch();
-
             if (targetGroupController != null)
-                targetGroupController.FocusOnBothPlayers();
-
+            targetGroupController.FocusOnBothPlayers();
             SetGateOpen(true);
-            LogEvent(EventType.SYNC_ACTION, playerTag);
+            LogEvent("SYNC_ACTION", "SUCCESS");
         }
     }
 
@@ -99,16 +88,22 @@ public class BlindSyncManager : MonoBehaviour
 
     private void SetGateOpen(bool open)
     {
-        if (sharedGate != null)
-            sharedGate.SetActive(!open);
+        if (redGateVisual != null)
+            redGateVisual.SetActive(!open);
+
+        if (blueGateVisual != null)
+            blueGateVisual.SetActive(!open);
+
+        if (redGateCollider != null)
+            redGateCollider.enabled = !open;
+
+        if (blueGateCollider != null)
+            blueGateCollider.enabled = !open;
     }
 
-    private void LogEvent(EventType eventType, string playerTag)
+    private void LogEvent(string eventName, string detail)
     {
-        if (AnalyticsManager.Instance == null ||
-            !AnalyticsManager.TryGetPlayerID(playerTag, out PlayerID playerID))
-            return;
-
-        AnalyticsManager.Instance.LogEvent(playerID, eventType);
+        long timestampMs = (long)(Time.time * 1000f);
+        Debug.Log($"{eventName} | {detail} | {timestampMs} ms");
     }
 }

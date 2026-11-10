@@ -78,12 +78,7 @@ public class BlindSyncManager : MonoBehaviour
                 targetGroupController.FocusOnBothPlayers();
 
             SetGateOpen(true);
-<<<<<<< HEAD
-
-            LogEvent("SYNC_ACTION", "SUCCESS");
-=======
             LogEvent(EventType.SYNC_ACTION, playerTag);
->>>>>>> e39a5120dd199c101d37e4cd0dbc4aa422a6facd
         }
     }
 

@@ -1,13 +1,12 @@
 
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(InputHandler))]
 public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private float runThreshold = 0.1f;
-    [SerializeField] private Transform graphics;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     private Animator animator;
     private PlayerController playerController;
@@ -21,12 +20,12 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         playerController = GetComponent<PlayerController>();
         inputHandler = GetComponent<InputHandler>();
 
-        if (graphics == null)
-            graphics = transform;
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Update()
@@ -40,16 +39,8 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool(IsJumpingHash, !isGrounded);
 
         if (moveX < -runThreshold)
-        {
-            Vector3 scale = graphics.localScale;
-            scale.x = -Mathf.Abs(scale.x);
-            graphics.localScale = scale;
-        }
+            spriteRenderer.flipX = true;
         else if (moveX > runThreshold)
-        {
-            Vector3 scale = graphics.localScale;
-            scale.x = Mathf.Abs(scale.x);
-            graphics.localScale = scale;
-        }
+            spriteRenderer.flipX = false;
     }
 }

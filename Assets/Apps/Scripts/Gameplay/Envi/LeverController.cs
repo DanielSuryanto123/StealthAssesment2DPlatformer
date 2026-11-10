@@ -1,200 +1,208 @@
-
 using System.Collections.Generic;
-using CoLab.Telemetry;
 using UnityEngine;
-using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
 public class LeverController : MonoBehaviour
 {
-    public enum ActivationMode
-    {
-        SingleUse,
-        PermanentButton
-    }
+    [Header("Player Settings")]
+    [SerializeField] private bool player1Only;
+    [SerializeField] private bool player2Only;
 
-    [Header("Player Access")]
-    [SerializeField] private string requiredPlayerTag = "Player1";
-
-    [Header("Activation Mode")]
-    [SerializeField] private ActivationMode activationMode = ActivationMode.SingleUse;
-
-    [Header("Co-op Puzzle")]
-    [SerializeField] private CoopDoorController coopPuzzle;
-
-    [Header("Laser Hazards")]
-    [SerializeField] private List<LaserHazard> linkedHazards = new List<LaserHazard>();
-    [SerializeField] private bool deactivateHazardsOnUse = true;
-
-    [Header("Interaction")]
-    [SerializeField] private bool singleUse = true;
+    [Header("Door")]
+    [SerializeField] private SinglePlayerDoorController singlePlayerDoor;
 
     [Header("Visuals")]
-    [SerializeField] private SpriteRenderer leverVisual;
-    [SerializeField] private Sprite leverOnSprite;
-    [SerializeField] private Sprite leverOffSprite;
+    [SerializeField] private SpriteRenderer leverRenderer;
+    [SerializeField] private Sprite offSprite;
+    [SerializeField] private Sprite onSprite;
     [SerializeField] private GameObject wrongColorFeedback;
     [SerializeField] private GameObject activationVfx;
 
-    private readonly Dictionary<string, InputHandler> playersNearby =
+    private readonly Dictionary<string, InputHandler> nearbyPlayers =
         new Dictionary<string, InputHandler>();
 
+    private readonly Dictionary<string, int> contactCount =
+        new Dictionary<string, int>();
+
     private bool activated;
-    private bool telemetrySuppressed;
-    private Transform lastActor;
 
-    private const float InvalidInteractDebounceSeconds = 0.25f;
-    private readonly Dictionary<string, float> lastInvalidInteractTime =
-        new Dictionary<string, float>();
-
-    public event System.Action<Transform> Activated;
-
-    public string RequiredPlayerTag => requiredPlayerTag;
     public bool IsActivated => activated;
 
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
-        // Level 4 levers are owned by BlindSyncManager, which logs its own events.
-        telemetrySuppressed = GetComponent<BlindSyncSwitch>() != null;
-        UpdateVisual(false);
+        UpdateVisual();
     }
 
     private void Update()
     {
-        bool lockedOut = activated && (activationMode == ActivationMode.PermanentButton || singleUse);
+        if (activated)
+            return;
 
-        foreach (var entry in playersNearby)
+        foreach (var player in nearbyPlayers)
         {
-            InputHandler input = entry.Value;
+            InputHandler input = player.Value;
 
             if (input == null || !input.InteractPressed)
                 continue;
 
-            if (entry.Key != requiredPlayerTag)
+            input.ResetInteract();
+
+            if (!CanPlayerUseLever(player.Key))
             {
-                LogInvalidInteract(entry.Key, input.transform);
-
-                if (lockedOut)
-                    continue;
-
-                if (wrongColorFeedback != null)
-                {
-                    Instantiate(
-                        wrongColorFeedback,
-                        transform.position,
-                        Quaternion.identity
-                    );
-                }
-
+                ShowWrongColorFeedback();
                 continue;
             }
 
-            if (lockedOut)
-                continue;
-
-            ActivateLever(input.transform);
+            ActivateLever();
             break;
         }
     }
 
+    private bool CanPlayerUseLever(string playerTag)
+    {
+        if (!player1Only && !player2Only)
+            return true;
+
+        if (player1Only && !player2Only)
+            return playerTag == "Player1";
+
+        if (player2Only && !player1Only)
+            return playerTag == "Player2";
+
+        // Both checked: neither player is allowed.
+        return false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        string playerTag = other.tag;
+        string playerTag = GetPlayerTag(other);
 
-        if (playerTag != "Player1" && playerTag != "Player2")
+        if (string.IsNullOrEmpty(playerTag))
             return;
 
-        InputHandler input = other.GetComponent<InputHandler>();
+        bool firstContact = !contactCount.ContainsKey(playerTag);
 
-        if (input == null)
-            input = other.GetComponentInParent<InputHandler>();
+        contactCount[playerTag] = firstContact
+            ? 1
+            : contactCount[playerTag] + 1;
 
-        if (input != null)
-            playersNearby[playerTag] = input;
+        RegisterPlayer(other, playerTag, firstContact);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        string playerTag = other.tag;
+        string playerTag = GetPlayerTag(other);
 
-        if (!playersNearby.TryGetValue(playerTag, out InputHandler input))
+        if (string.IsNullOrEmpty(playerTag))
             return;
 
-        InputHandler exitingInput = other.GetComponent<InputHandler>();
-
-        if (exitingInput == null)
-            exitingInput = other.GetComponentInParent<InputHandler>();
-
-        if (input == exitingInput)
-            playersNearby.Remove(playerTag);
-    }
-
-    private void LogInvalidInteract(string playerTag, Transform actor)
-    {
-        if (telemetrySuppressed)
+        if (!contactCount.TryGetValue(playerTag, out int count))
             return;
 
-        if (lastInvalidInteractTime.TryGetValue(playerTag, out float last) &&
-            Time.time - last < InvalidInteractDebounceSeconds)
-            return;
+        count--;
 
-        lastInvalidInteractTime[playerTag] = Time.time;
-        AnalyticsManager.Instance?.LogEvent(actor, EventType.INVALID_INTERACT);
-    }
-
-    public void ActivateLever(Transform actor)
-    {
-        if (activated)
-            return;
-
-        activated = true;
-        lastActor = actor;
-        UpdateVisual(true);
-
-        foreach (LaserHazard hazard in linkedHazards)
+        if (count <= 0)
         {
-            if (hazard != null)
-                hazard.SetActive(!deactivateHazardsOnUse);
+            contactCount.Remove(playerTag);
+            nearbyPlayers.Remove(playerTag);
+        }
+        else
+        {
+            contactCount[playerTag] = count;
+        }
+    }
+
+    private void RegisterPlayer(
+        Collider2D other,
+        string playerTag,
+        bool firstContact)
+    {
+        Transform playerRoot = other.transform.root;
+
+        InputHandler input = playerRoot.GetComponent<InputHandler>();
+
+        if (input == null)
+            input = other.GetComponentInParent<InputHandler>();
+
+        if (input == null)
+        {
+            Debug.LogWarning(
+                playerRoot.name + " has no InputHandler!"
+            );
+            return;
         }
 
+        nearbyPlayers[playerTag] = input;
+
+        Debug.Log(
+            playerRoot.name + " entered lever. Tag: " + playerTag
+        );
+    }
+
+    private string GetPlayerTag(Collider2D other)
+    {
+        Transform playerRoot = other.transform.root;
+        string playerTag = playerRoot.tag;
+
+        if (playerTag == "Player1" || playerTag == "Player2")
+            return playerTag;
+
+        return null;
+    }
+
+    private void ActivateLever()
+    {
+        activated = true;
+
+        UpdateVisual();
+
         if (activationVfx != null)
-            Instantiate(activationVfx, transform.position, Quaternion.identity);
+        {
+            Instantiate(
+                activationVfx,
+                transform.position,
+                Quaternion.identity
+            );
+        }
 
-        if (coopPuzzle != null)
-            coopPuzzle.RegisterLever(requiredPlayerTag, this, actor);
+        if (singlePlayerDoor != null)
+            singlePlayerDoor.OpenDoor();
 
-        if (!telemetrySuppressed)
-            AnalyticsManager.Instance?.LogEvent(actor, EventType.PULL_LEVER);
-
-        Activated?.Invoke(actor);
+        Debug.Log(name + " activated permanently!");
     }
 
     public void ResetLever()
     {
-        // RELEASE_LEVER: the lever the player pulled springs back after the co-op window timed out (never on success).
-        if (activated && !telemetrySuppressed && lastActor != null && gameObject.scene.IsValid())
-            AnalyticsManager.Instance?.LogEvent(lastActor, EventType.RELEASE_LEVER);
-
         activated = false;
-        lastActor = null;
-        UpdateVisual(false);
 
-        foreach (LaserHazard hazard in linkedHazards)
-        {
-            if (hazard != null)
-                hazard.ResetToStartState();
-        }
+        UpdateVisual();
+
+        if (singlePlayerDoor != null)
+            singlePlayerDoor.CloseDoor();
     }
 
-    private void UpdateVisual(bool isOn)
+    private void UpdateVisual()
     {
-        if (leverVisual == null)
+        if (leverRenderer == null)
             return;
 
-        Sprite targetSprite = isOn ? leverOnSprite : leverOffSprite;
+        leverRenderer.sprite = activated
+            ? onSprite
+            : offSprite;
+    }
 
-        if (targetSprite != null)
-            leverVisual.sprite = targetSprite;
+    private void ShowWrongColorFeedback()
+    {
+        if (wrongColorFeedback == null)
+            return;
+
+        GameObject feedback = Instantiate(
+            wrongColorFeedback,
+            transform.position,
+            Quaternion.identity
+        );
+
+        Destroy(feedback, 1f);
     }
 }

@@ -6,23 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Apps/Scenes/MainMenu.unity
-    guid: ea150a6d1e8be3443b105de5befa1dd8
-  - enabled: 1
     path: Assets/Apps/Scenes/Level1.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Apps/Scenes/Level2.unity
-    guid: 9e725d6b96f9317478da33544dba128a
+    guid: bf89db75f18bb4e4a9f325bb8c008b0e
   - enabled: 1
     path: Assets/Apps/Scenes/Level3.unity
-    guid: 6276bbc3a9e57324b854fea09e708945
-  - enabled: 1
-    path: Assets/Apps/Scenes/Level4.unity
-    guid: 08054ec9b977da346a1c4679a20bb646
+    guid: b5499126a34586c489b42ccfcc1a8552
   - enabled: 1
     path: Assets/Apps/Scenes/Level5.unity
     guid: 9867c1f6faa5dff45b8976b2b99bd49e
+  - enabled: 1
+    path: Assets/Apps/Scenes/Level4.unity
+    guid: 08054ec9b977da346a1c4679a20bb646
   - enabled: 1
     path: Assets/Apps/Scenes/Level6.unity
     guid: 274cb58af891e134e87f6126207fb01d
@@ -32,7 +29,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Apps/Scenes/Level8.unity
     guid: 412f4f2bbec645c468f67a12cc82d863
-  - enabled: 1
-    path: Assets/Apps/Scenes/Result.unity
-    guid: d4ba590609dcde641a4cb3430ed8de6d
   m_configObjects: {}

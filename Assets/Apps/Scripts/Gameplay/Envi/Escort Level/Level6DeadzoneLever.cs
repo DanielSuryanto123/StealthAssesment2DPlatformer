@@ -1,82 +1,44 @@
-using System.Collections.Generic;
 using UnityEngine;
-using CoLab.Telemetry;
 
 public class Level6DeadzoneLever : MonoBehaviour
 {
     [Header("Rescue")]
     [SerializeField] private Level6DeadzoneTrigger targetDeadzone;
     [SerializeField] private bool singleUse = true;
-    [SerializeField] private string requiredPlayerTag = "Player2";
-
-    [Header("Visuals")]
-    [SerializeField] private SpriteRenderer leverRenderer;
-    [SerializeField] private Sprite offSprite;
-    [SerializeField] private Sprite onSprite;
-
-    private readonly Dictionary<string, InputHandler> playersNearby = new();
 
     private bool isActivated;
+    private LeverController leverController;
 
-    private void Start()
+    private void Awake()
     {
-        UpdateVisual();
+        leverController = GetComponent<LeverController>();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (singleUse && isActivated)
-            return;
+        if (leverController == null)
+            leverController = GetComponent<LeverController>();
 
-        if (!playersNearby.TryGetValue(requiredPlayerTag, out InputHandler input))
-            return;
-
-        if (input == null || !input.InteractPressed)
-            return;
-
-        input.ResetInteract();
-
-        ActivateLever();
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Transform playerRoot = other.transform.root;
-        string playerTag = playerRoot.tag;
-
-        if (playerTag != "Player1" && playerTag != "Player2")
-            return;
-
-        InputHandler input = playerRoot.GetComponent<InputHandler>();
-
-        if (input == null)
-            input = other.GetComponentInParent<InputHandler>();
-
-        if (input == null)
+        if (leverController == null)
         {
-            Debug.LogWarning(playerRoot.name + " has no InputHandler!");
+            Debug.LogWarning(gameObject.name + ": Level6DeadzoneLever needs a sibling LeverController.");
             return;
         }
 
-        playersNearby[playerTag] = input;
-
-        Debug.Log(playerRoot.name + " entered Deadzone Lever. Tag: " + playerTag);
+        leverController.Activated += ActivateLever;
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnDisable()
     {
-        Transform playerRoot = other.transform.root;
-        string playerTag = playerRoot.tag;
-
-        if (playerTag == "Player1" || playerTag == "Player2")
-        {
-            playersNearby.Remove(playerTag);
-            Debug.Log(playerRoot.name + " exited Deadzone Lever.");
-        }
+        if (leverController != null)
+            leverController.Activated -= ActivateLever;
     }
 
-    private void ActivateLever()
+    public void ActivateLever(Transform actor)
     {
+        if (actor == null || !actor.CompareTag("Player2"))
+            return;
+
         if (singleUse && isActivated)
             return;
 
@@ -88,31 +50,14 @@ public class Level6DeadzoneLever : MonoBehaviour
 
         isActivated = true;
 
-        targetDeadzone.ReleasePlayer();
+        // PULL_LEVER is logged once by the sibling LeverController.
+        targetDeadzone.ReleasePlayer(actor);
 
-        UpdateVisual();
-
-        if (AnalyticsManager.Instance != null)
-        {
-            AnalyticsManager.Instance.LogLeverPull(transform);
-        }
-
-        Debug.Log(gameObject.name + " activated by " + requiredPlayerTag + ".");
+        Debug.Log(gameObject.name + " activated by Player2.");
     }
 
     public void ResetLever()
     {
         isActivated = false;
-        UpdateVisual();
-    }
-
-    private void UpdateVisual()
-    {
-        if (leverRenderer == null)
-            return;
-
-        leverRenderer.sprite = isActivated ? onSprite : offSprite;
     }
 }
-
-

@@ -1,23 +1,29 @@
-using System.Collections.Generic;
+
+using CoLab.Telemetry;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using EventType = CoLab.Telemetry.EventType;
 
 public class RescueLever : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PitfallRescueManager rescueManager;
-
-    [Header("Interaction")]
-    [SerializeField] private string requiredPlayerTag = "Player1";
-
-    [Header("Visuals")]
     [SerializeField] private SpriteRenderer leverVisual;
     [SerializeField] private Sprite leverOffSprite;
     [SerializeField] private Sprite leverOnSprite;
 
-    private readonly Dictionary<string, InputHandler> playersNearby = new();
-    private readonly Dictionary<string, GameObject> nearbyPlayers = new();
+    [Header("Interaction")]
+    [SerializeField] private string requiredPlayerTag = "Player1";
 
+    private InputHandler nearbyInput;
+    private GameObject nearbyPlayer;
+    private GameObject wrongPlayer;
+    private InputHandler wrongInput;
     private bool activated;
+
+    private const float InvalidInteractDebounceSeconds = 0.25f;
+    private readonly System.Collections.Generic.Dictionary<string, float> lastInvalidInteractTime =
+        new System.Collections.Generic.Dictionary<string, float>();
 
     private void Start()
     {
@@ -26,74 +32,84 @@ public class RescueLever : MonoBehaviour
 
     private void Update()
     {
-        if (activated)
+        if (wrongInput != null && wrongPlayer != null && wrongInput.InteractPressed)
+            LogInvalidInteract(wrongPlayer.tag, wrongPlayer.transform);
+
+        if (activated || nearbyInput == null || nearbyPlayer == null)
             return;
 
-        if (!playersNearby.TryGetValue(requiredPlayerTag, out InputHandler input))
-            return;
-
-        if (input == null || !input.InteractPressed)
-            return;
-
-        if (!nearbyPlayers.TryGetValue(requiredPlayerTag, out GameObject player))
-            return;
-
-        if (rescueManager == null)
+        if (nearbyInput.InteractPressed)
         {
-            Debug.LogError("RescueLever: Rescue Manager is missing.");
-            return;
-        }
+            if (rescueManager == null)
+            {
+                Debug.LogError("RescueLever: Rescue Manager is missing.");
+                return;
+            }
 
-        input.ResetInteract();
+            rescueManager.ActivateRescue(nearbyPlayer);
 
-        rescueManager.ActivateRescue(player);
-
-        if (rescueManager.IsRescueCompleted)
-        {
-            activated = true;
-            SetVisual(true);
-
-            Debug.Log(gameObject.name + " activated by " + requiredPlayerTag + ".");
+            if (rescueManager.IsRescueCompleted)
+            {
+                activated = true;
+                SetVisual(true);
+                AnalyticsManager.Instance?.LogEvent(nearbyPlayer.transform, EventType.PULL_LEVER);
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Transform playerRoot = other.transform.root;
-        string playerTag = playerRoot.tag;
+        PlayerInput playerInput = other.GetComponentInParent<PlayerInput>();
 
-        if (playerTag != "Player1" && playerTag != "Player2")
+        if (playerInput == null)
             return;
 
-        InputHandler input = playerRoot.GetComponent<InputHandler>();
+        GameObject player = playerInput.gameObject;
 
-        if (input == null)
-            input = other.GetComponentInParent<InputHandler>();
-
-        if (input == null)
+        if (!player.CompareTag(requiredPlayerTag))
         {
-            Debug.LogWarning(playerRoot.name + " has no InputHandler!");
+            if (player.CompareTag("Player1") || player.CompareTag("Player2"))
+            {
+                wrongPlayer = player;
+                wrongInput = player.GetComponent<InputHandler>();
+            }
+
             return;
         }
 
-        playersNearby[playerTag] = input;
-        nearbyPlayers[playerTag] = playerRoot.gameObject;
-
-        Debug.Log(playerRoot.name + " entered Rescue Lever. Tag: " + playerTag);
+        nearbyPlayer = player;
+        nearbyInput = player.GetComponent<InputHandler>();
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Transform playerRoot = other.transform.root;
-        string playerTag = playerRoot.tag;
+        PlayerInput playerInput = other.GetComponentInParent<PlayerInput>();
 
-        if (playerTag == "Player1" || playerTag == "Player2")
+        if (playerInput == null)
+            return;
+
+        if (wrongPlayer == playerInput.gameObject)
         {
-            playersNearby.Remove(playerTag);
-            nearbyPlayers.Remove(playerTag);
-
-            Debug.Log(playerRoot.name + " exited Rescue Lever.");
+            wrongPlayer = null;
+            wrongInput = null;
+            return;
         }
+
+        if (nearbyPlayer != playerInput.gameObject)
+            return;
+
+        nearbyPlayer = null;
+        nearbyInput = null;
+    }
+
+    private void LogInvalidInteract(string playerTag, Transform actor)
+    {
+        if (lastInvalidInteractTime.TryGetValue(playerTag, out float last) &&
+            Time.time - last < InvalidInteractDebounceSeconds)
+            return;
+
+        lastInvalidInteractTime[playerTag] = Time.time;
+        AnalyticsManager.Instance?.LogEvent(actor, EventType.INVALID_INTERACT);
     }
 
     private void SetVisual(bool isOn)
@@ -106,11 +122,4 @@ public class RescueLever : MonoBehaviour
         else if (!isOn && leverOffSprite != null)
             leverVisual.sprite = leverOffSprite;
     }
-
-    public void ResetLever()
-    {
-        activated = false;
-        SetVisual(false);
-    }
 }
-

@@ -90,6 +90,11 @@ public class Level7Button : MonoBehaviour
         if (activatedVFX != null)
             activatedVFX.SetActive(true);
 
+        AnalyticsManager.Instance?.LogEvent(
+            actor.transform,
+            EventType.STEP_ON_BUTTON
+        );
+
         Debug.Log("Puzzle button " + buttonID + " activated.");
     }
 

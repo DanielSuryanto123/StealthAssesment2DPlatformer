@@ -16,6 +16,23 @@ public class Level7SequenceManager : MonoBehaviour
     {
         if (exitDoor != null)
             exitDoor.SetActive(true);
+
+        EnsurePlayerInteraction("Player1");
+        EnsurePlayerInteraction("Player2");
+    }
+
+    private static void EnsurePlayerInteraction(string playerTag)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag(playerTag);
+
+        if (player == null)
+        {
+            Debug.LogWarning("Level7SequenceManager: no object tagged " + playerTag + " found.");
+            return;
+        }
+
+        if (player.GetComponent<Level7PlayerInteraction>() == null)
+            player.AddComponent<Level7PlayerInteraction>();
     }
 
     public void RegisterButton(int buttonID)

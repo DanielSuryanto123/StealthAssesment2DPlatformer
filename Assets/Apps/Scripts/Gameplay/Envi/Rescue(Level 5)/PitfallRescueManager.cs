@@ -58,6 +58,7 @@ public class PitfallRescueManager : MonoBehaviour
         rescueStarted = true;
 
         LogEvent(trappedPlayerTag, EventType.RESCUE_START, true, 0f);
+        SetTrapped(true);
         Debug.Log("Player 2 is trapped. Player 1 must activate the rescue lever.");
     }
 
@@ -85,7 +86,17 @@ public class PitfallRescueManager : MonoBehaviour
         rescueCompleted = true;
 
         LogEvent(rescuerPlayerTag, EventType.RESCUE_TIME, false, rescueDuration);
+        SetTrapped(false);
         rescuePlatform.StartRescue(trappedPlayer);
+    }
+
+    private void SetTrapped(bool trapped)
+    {
+        if (AnalyticsManager.Instance == null ||
+            !AnalyticsManager.TryGetPlayerID(trappedPlayerTag, out PlayerID trappedPlayerID))
+            return;
+
+        AnalyticsManager.Instance.SetPlayerTrapped(trappedPlayerID, trapped);
     }
 
     private void LogEvent(

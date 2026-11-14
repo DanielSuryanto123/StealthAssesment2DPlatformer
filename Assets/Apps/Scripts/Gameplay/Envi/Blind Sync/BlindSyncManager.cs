@@ -10,9 +10,12 @@ public class BlindSyncManager : MonoBehaviour
     [SerializeField] private BlindSyncSwitch redSwitch;
     [SerializeField] private BlindSyncSwitch blueSwitch;
     [SerializeField] private TargetGroupController targetGroupController;
-
-    [Header("Shared Gate")]
-    [SerializeField] private GameObject sharedGate;
+    
+    [Header("Gate Visuals")]
+    [SerializeField] private GameObject redGateVisual;
+    [SerializeField] private GameObject blueGateVisual;
+    [SerializeField] private Collider2D redGateCollider;
+    [SerializeField] private Collider2D blueGateCollider;
 
     private bool redActivated;
     private bool blueActivated;
@@ -67,28 +70,24 @@ public class BlindSyncManager : MonoBehaviour
         if (redActivated && blueActivated)
         {
             completed = true;
-
-            if (redSwitch != null)
-                redSwitch.LockSwitch();
-
-            if (blueSwitch != null)
-                blueSwitch.LockSwitch();
-
             if (targetGroupController != null)
-                targetGroupController.FocusOnBothPlayers();
-
+            targetGroupController.FocusOnBothPlayers();
             SetGateOpen(true);
-<<<<<<< HEAD
-
-            LogEvent("SYNC_ACTION", "SUCCESS");
-=======
             LogEvent(EventType.SYNC_ACTION, playerTag);
->>>>>>> e39a5120dd199c101d37e4cd0dbc4aa422a6facd
         }
     }
 
     public void ResetPuzzle()
     {
+        // STEP_OFF_BUTTON: each switch a player had pressed is released when the sync window fails (not on success).
+        if (!completed)
+        {
+            if (redActivated)
+                LogEvent(EventType.STEP_OFF_BUTTON, "Player1");
+            if (blueActivated)
+                LogEvent(EventType.STEP_OFF_BUTTON, "Player2");
+        }
+
         redActivated = false;
         blueActivated = false;
 
@@ -104,8 +103,17 @@ public class BlindSyncManager : MonoBehaviour
 
     private void SetGateOpen(bool open)
     {
-        if (sharedGate != null)
-            sharedGate.SetActive(!open);
+        if (redGateVisual != null)
+            redGateVisual.SetActive(!open);
+
+        if (blueGateVisual != null)
+            blueGateVisual.SetActive(!open);
+
+        if (redGateCollider != null)
+            redGateCollider.enabled = !open;
+
+        if (blueGateCollider != null)
+            blueGateCollider.enabled = !open;
     }
 
     private void LogEvent(EventType eventType, string playerTag)

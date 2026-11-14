@@ -1,3 +1,5 @@
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +30,9 @@ public class LeverController : MonoBehaviour
 
     public bool IsActivated => activated;
 
+    // Notifies other scripts when a player successfully activates this lever.
+    public event Action<Transform> Activated;
+
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -54,7 +59,8 @@ public class LeverController : MonoBehaviour
                 continue;
             }
 
-            ActivateLever();
+            Transform actor = input.transform.root;
+            ActivateLever(actor);
             break;
         }
     }
@@ -151,8 +157,11 @@ public class LeverController : MonoBehaviour
         return null;
     }
 
-    private void ActivateLever()
+    private void ActivateLever(Transform actor)
     {
+        if (activated)
+            return;
+
         activated = true;
 
         UpdateVisual();
@@ -168,6 +177,9 @@ public class LeverController : MonoBehaviour
 
         if (singlePlayerDoor != null)
             singlePlayerDoor.OpenDoor();
+
+        // Notify scripts listening to this lever.
+        Activated?.Invoke(actor);
 
         Debug.Log(name + " activated permanently!");
     }

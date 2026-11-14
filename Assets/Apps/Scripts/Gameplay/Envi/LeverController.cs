@@ -1,3 +1,5 @@
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +30,9 @@ public class LeverController : MonoBehaviour
 
     public bool IsActivated => activated;
 
+    // Event called when a player successfully activates the lever.
+    public event Action<Transform> Activated;
+
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -54,7 +59,9 @@ public class LeverController : MonoBehaviour
                 continue;
             }
 
-            ActivateLever();
+            Transform actor = input.transform.root;
+
+            ActivateLever(actor);
             break;
         }
     }
@@ -70,7 +77,7 @@ public class LeverController : MonoBehaviour
         if (player2Only && !player1Only)
             return playerTag == "Player2";
 
-        // Both checked: neither player is allowed.
+        // If both are checked, neither player is allowed.
         return false;
     }
 
@@ -130,6 +137,7 @@ public class LeverController : MonoBehaviour
             Debug.LogWarning(
                 playerRoot.name + " has no InputHandler!"
             );
+
             return;
         }
 
@@ -151,8 +159,11 @@ public class LeverController : MonoBehaviour
         return null;
     }
 
-    private void ActivateLever()
+    private void ActivateLever(Transform actor)
     {
+        if (activated || actor == null)
+            return;
+
         activated = true;
 
         UpdateVisual();
@@ -168,6 +179,9 @@ public class LeverController : MonoBehaviour
 
         if (singlePlayerDoor != null)
             singlePlayerDoor.OpenDoor();
+
+        // Notify Level6DeadzoneLever.
+        Activated?.Invoke(actor);
 
         Debug.Log(name + " activated permanently!");
     }

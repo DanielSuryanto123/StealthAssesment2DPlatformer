@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,9 +28,6 @@ public class LeverController : MonoBehaviour
 
     public bool IsActivated => activated;
 
-    // Notifies other scripts when the lever is activated.
-    public event Action<Transform> Activated;
-
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -59,12 +54,7 @@ public class LeverController : MonoBehaviour
                 continue;
             }
 
-            Transform actor = GetPlayerTransform(player.Key);
-
-            if (actor == null)
-                continue;
-
-            ActivateLever(actor);
+            ActivateLever();
             break;
         }
     }
@@ -80,6 +70,7 @@ public class LeverController : MonoBehaviour
         if (player2Only && !player1Only)
             return playerTag == "Player2";
 
+        // Both checked: neither player is allowed.
         return false;
     }
 
@@ -96,7 +87,7 @@ public class LeverController : MonoBehaviour
             ? 1
             : contactCount[playerTag] + 1;
 
-        RegisterPlayer(other, playerTag);
+        RegisterPlayer(other, playerTag, firstContact);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -122,7 +113,10 @@ public class LeverController : MonoBehaviour
         }
     }
 
-    private void RegisterPlayer(Collider2D other, string playerTag)
+    private void RegisterPlayer(
+        Collider2D other,
+        string playerTag,
+        bool firstContact)
     {
         Transform playerRoot = other.transform.root;
 
@@ -133,11 +127,17 @@ public class LeverController : MonoBehaviour
 
         if (input == null)
         {
-            Debug.LogWarning(playerRoot.name + " has no InputHandler!");
+            Debug.LogWarning(
+                playerRoot.name + " has no InputHandler!"
+            );
             return;
         }
 
         nearbyPlayers[playerTag] = input;
+
+        Debug.Log(
+            playerRoot.name + " entered lever. Tag: " + playerTag
+        );
     }
 
     private string GetPlayerTag(Collider2D other)
@@ -151,22 +151,8 @@ public class LeverController : MonoBehaviour
         return null;
     }
 
-    private Transform GetPlayerTransform(string playerTag)
+    private void ActivateLever()
     {
-        foreach (var player in nearbyPlayers)
-        {
-            if (player.Key == playerTag && player.Value != null)
-                return player.Value.transform;
-        }
-
-        return null;
-    }
-
-    private void ActivateLever(Transform actor)
-    {
-        if (activated)
-            return;
-
         activated = true;
 
         UpdateVisual();
@@ -183,10 +169,7 @@ public class LeverController : MonoBehaviour
         if (singlePlayerDoor != null)
             singlePlayerDoor.OpenDoor();
 
-        // Notify Level6DeadzoneLever and other listeners.
-        Activated?.Invoke(actor);
-
-        Debug.Log(name + " activated by " + actor.name + "!");
+        Debug.Log(name + " activated permanently!");
     }
 
     public void ResetLever()

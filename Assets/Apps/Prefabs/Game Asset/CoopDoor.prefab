@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6724079637551589978}
   - component: {fileID: 5310336929389383698}
   - component: {fileID: 1277559058764645542}
-  - component: {fileID: -5288145735913482070}
+  - component: {fileID: 7602627795307995428}
   m_Layer: 0
   m_Name: CoopDoor
   m_TagString: Untagged
@@ -139,7 +139,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.57, y: 4.02}
   m_EdgeRadius: 0
---- !u!114 &-5288145735913482070
+--- !u!114 &7602627795307995428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,7 +148,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8244063118594354221}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9c2add3451ce8644b1f4554add6c02b, type: 3}
+  m_Script: {fileID: 11500000, guid: 39d2650ad614f3c49874796dc7efd92c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoopDoorController
-  door: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::SinglePlayerDoorController
+  doorVisual: {fileID: 0}
+  doorCollider: {fileID: 0}

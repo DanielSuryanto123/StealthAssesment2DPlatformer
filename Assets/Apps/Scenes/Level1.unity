@@ -4071,6 +4071,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f7a41be6678680478db270f120eef52, type: 3}
+--- !u!4 &1186435770 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5572155570895059542, guid: 8f7a41be6678680478db270f120eef52, type: 3}
+  m_PrefabInstance: {fileID: 1186435769}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1262719647
 GameObject:
   m_ObjectHideFlags: 0
@@ -4100,8 +4105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b5745e8e0d97947a7a0c07ad0f4092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  totalCoins: 7
-  door: {fileID: 0}
+  player1: {fileID: 1186435770}
+  player2: {fileID: 1818839282}
+  firstLevelBuildIndex: 0
 --- !u!4 &1262719649
 Transform:
   m_ObjectHideFlags: 0
@@ -4961,6 +4967,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
+--- !u!4 &1818839282 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1694547777940259312, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
+  m_PrefabInstance: {fileID: 1818839281}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2012639706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4324299458459810481, guid: b61d8057e60c0b84e989ac587dbb1d9e, type: 3}

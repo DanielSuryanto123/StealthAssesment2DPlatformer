@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using CoLab.Telemetry;
 using EventType = CoLab.Telemetry.EventType;
@@ -14,6 +13,7 @@ public class PitfallRescueManager : MonoBehaviour
 
     private Transform trappedPlayer;
     private Collider2D trappedPlayerCollider;
+
     private float trappedTime;
     private bool rescueStarted;
     private bool rescueCompleted;
@@ -31,7 +31,12 @@ public class PitfallRescueManager : MonoBehaviour
             rescuePlatform.GetComponent<Collider2D>();
 
         if (platformCollider == null)
+        {
+            Debug.LogError(
+                "PitfallRescueManager: Rescue Platform needs a Collider2D."
+            );
             return false;
+        }
 
         return trappedPlayerCollider.IsTouching(platformCollider);
     }
@@ -44,22 +49,38 @@ public class PitfallRescueManager : MonoBehaviour
         if (!player.CompareTag(trappedPlayerTag))
             return;
 
-        trappedPlayer = player.transform;
-        trappedPlayerCollider = player.GetComponent<Collider2D>();
+        Collider2D playerCollider =
+            player.GetComponent<Collider2D>();
 
-        if (trappedPlayerCollider == null)
+        if (playerCollider == null)
+            playerCollider = player.GetComponentInChildren<Collider2D>();
+
+        if (playerCollider == null)
         {
-            Debug.LogError("PitfallRescueManager: Player2 needs a Collider2D.");
-            trappedPlayer = null;
+            Debug.LogError(
+                "PitfallRescueManager: Player2 needs a Collider2D."
+            );
             return;
         }
+
+        trappedPlayer = player.transform;
+        trappedPlayerCollider = playerCollider;
 
         trappedTime = Time.time;
         rescueStarted = true;
 
-        LogEvent(trappedPlayerTag, EventType.RESCUE_START, true, 0f);
+        LogEvent(
+            trappedPlayerTag,
+            EventType.RESCUE_START,
+            true,
+            0f
+        );
+
         SetTrapped(true);
-        Debug.Log("Player 2 is trapped. Player 1 must activate the rescue lever.");
+
+        Debug.Log(
+            "Player2 is trapped. Player1 must activate the rescue lever."
+        );
     }
 
     public void ActivateRescue(GameObject player)
@@ -68,35 +89,68 @@ public class PitfallRescueManager : MonoBehaviour
             return;
 
         if (!IsPlayerTrapped || rescueCompleted)
-            return;
-
-        if (!IsTrappedPlayerOnPlatform())
         {
-            Debug.Log("Rescue unavailable: Player 2 is not on the rescue platform.");
+            Debug.Log("Rescue unavailable: Player2 is not trapped.");
             return;
         }
 
         if (rescuePlatform == null)
         {
-            Debug.LogError("PitfallRescueManager: Rescue Platform is not assigned.");
+            Debug.LogError(
+                "PitfallRescueManager: Rescue Platform is not assigned."
+            );
             return;
         }
 
+        if (!rescuePlatform.IsReady)
+        {
+            Debug.LogError(
+                "PitfallRescueManager: Rescue Platform is missing its Upper Position."
+            );
+            return;
+        }
+
+        if (!IsTrappedPlayerOnPlatform())
+        {
+            Debug.Log(
+                "Rescue unavailable: Player2 is not touching the rescue platform."
+            );
+            return;
+        }
+
+        bool movementStarted = rescuePlatform.StartRescue(trappedPlayer);
+
+        if (!movementStarted)
+            return;
+
         float rescueDuration = Time.time - trappedTime;
+
         rescueCompleted = true;
 
-        LogEvent(rescuerPlayerTag, EventType.RESCUE_TIME, false, rescueDuration);
+        LogEvent(
+            trappedPlayerTag,
+            EventType.RESCUE_TIME,
+            false,
+            rescueDuration
+        );
+
         SetTrapped(false);
-        rescuePlatform.StartRescue(trappedPlayer);
+
+        Debug.Log("Rescue started successfully!");
     }
 
     private void SetTrapped(bool trapped)
     {
         if (AnalyticsManager.Instance == null ||
-            !AnalyticsManager.TryGetPlayerID(trappedPlayerTag, out PlayerID trappedPlayerID))
+            !AnalyticsManager.TryGetPlayerID(
+                trappedPlayerTag,
+                out PlayerID trappedPlayerID))
             return;
 
-        AnalyticsManager.Instance.SetPlayerTrapped(trappedPlayerID, trapped);
+        AnalyticsManager.Instance.SetPlayerTrapped(
+            trappedPlayerID,
+            trapped
+        );
     }
 
     private void LogEvent(
@@ -106,11 +160,16 @@ public class PitfallRescueManager : MonoBehaviour
         float durationSeconds)
     {
         if (AnalyticsManager.Instance == null ||
-            !AnalyticsManager.TryGetPlayerID(playerTag, out PlayerID playerID))
+            !AnalyticsManager.TryGetPlayerID(
+                playerTag,
+                out PlayerID playerID))
             return;
 
         AnalyticsManager.Instance.LogEvent(
-            playerID, eventType, isTrapped, durationSeconds
+            playerID,
+            eventType,
+            isTrapped,
+            durationSeconds
         );
     }
 }

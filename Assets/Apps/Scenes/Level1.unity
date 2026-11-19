@@ -4284,8 +4284,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b5745e8e0d97947a7a0c07ad0f4092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player1: {fileID: 0}
-  player2: {fileID: 0}
+  player1: {fileID: 1413401409}
+  player2: {fileID: 1886748531}
   firstLevelBuildIndex: 1
 --- !u!4 &1262719649
 Transform:
@@ -4410,6 +4410,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1576773625 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6549217252682682271, guid: 80083eb626abdaa44be5ea304f85861d, type: 3}
+  m_PrefabInstance: {fileID: 6016954824366637302}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cinemachine::Cinemachine.CinemachineVirtualCamera
 --- !u!1 &1648508733
 GameObject:
   m_ObjectHideFlags: 0
@@ -5106,6 +5117,27 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!1 &1699743418 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2330766480294406575, guid: 80083eb626abdaa44be5ea304f85861d, type: 3}
+  m_PrefabInstance: {fileID: 6016954824366637302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1699743419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1699743418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76dc6966c73677b45a1af613f36090d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraModeController
+  virtualCamera: {fileID: 1576773625}
+  normalZoom: 10
+  blindSyncZoom: 0
+  zoomSmoothness: 3
 --- !u!1 &1782517091
 GameObject:
   m_ObjectHideFlags: 0
@@ -5461,10 +5493,14 @@ PrefabInstance:
       propertyPath: m_Targets.Array.data[1].target
       value: 
       objectReference: {fileID: 1413401409}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2950919202741417692, guid: 80083eb626abdaa44be5ea304f85861d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2330766480294406575, guid: 80083eb626abdaa44be5ea304f85861d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1699743419}
   m_SourcePrefab: {fileID: 100100000, guid: 80083eb626abdaa44be5ea304f85861d, type: 3}
 --- !u!1001 &8116037633007939484
 PrefabInstance:

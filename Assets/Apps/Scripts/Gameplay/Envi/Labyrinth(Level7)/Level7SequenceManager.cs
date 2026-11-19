@@ -5,7 +5,9 @@ public class Level7SequenceManager : MonoBehaviour
 {
     [Header("Puzzle Settings")]
     [SerializeField] private int totalButtons = 3;
-    [SerializeField] private GameObject exitDoor;
+
+    [Header("Exit Doors")]
+    [SerializeField] private GameObject[] exitDoors;
 
     private HashSet<int> activatedButtons = new HashSet<int>();
 
@@ -14,8 +16,12 @@ public class Level7SequenceManager : MonoBehaviour
 
     private void Start()
     {
-        if (exitDoor != null)
-            exitDoor.SetActive(true);
+        // Keep all doors closed at the beginning.
+        foreach (GameObject door in exitDoors)
+        {
+            if (door != null)
+                door.SetActive(true);
+        }
 
         EnsurePlayerInteraction("Player1");
         EnsurePlayerInteraction("Player2");
@@ -27,7 +33,10 @@ public class Level7SequenceManager : MonoBehaviour
 
         if (player == null)
         {
-            Debug.LogWarning("Level7SequenceManager: no object tagged " + playerTag + " found.");
+            Debug.LogWarning(
+                "Level7SequenceManager: No object tagged " +
+                playerTag + " found."
+            );
             return;
         }
 
@@ -40,15 +49,25 @@ public class Level7SequenceManager : MonoBehaviour
         if (IsComplete || !activatedButtons.Add(buttonID))
             return;
 
-        Debug.Log("Button " + buttonID + " activated. " +
-                  ActivatedButtonCount + "/" + totalButtons);
+        Debug.Log(
+            "Button " + buttonID + " activated. " +
+            ActivatedButtonCount + "/" + totalButtons
+        );
 
         if (IsComplete)
         {
-            if (exitDoor != null)
-                exitDoor.SetActive(false);
-
-            Debug.Log("All buttons activated. Exit unlocked!");
+            OpenAllDoors();
         }
+    }
+
+    private void OpenAllDoors()
+    {
+        foreach (GameObject door in exitDoors)
+        {
+            if (door != null)
+                door.SetActive(false);
+        }
+
+        Debug.Log("All buttons activated. All exit doors unlocked!");
     }
 }

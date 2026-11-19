@@ -1,6 +1,4 @@
-
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Collider2D))]
 public class PitfallTrigger : MonoBehaviour
@@ -20,14 +18,11 @@ public class PitfallTrigger : MonoBehaviour
             return;
         }
 
-        PlayerInput playerInput = other.GetComponentInParent<PlayerInput>();
+        Transform playerRoot = other.transform.root;
 
-        if (playerInput == null)
+        if (!playerRoot.CompareTag("Player2"))
             return;
 
-        GameObject player = playerInput.gameObject;
-
-        if (player.CompareTag("Player2"))
-            rescueManager.TrapPlayer(player);
+        rescueManager.TrapPlayer(playerRoot.gameObject);
     }
 }

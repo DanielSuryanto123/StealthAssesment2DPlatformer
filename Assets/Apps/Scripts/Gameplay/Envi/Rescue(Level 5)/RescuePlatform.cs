@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 
@@ -12,24 +11,35 @@ public class RescuePlatform : MonoBehaviour
     private Rigidbody2D platformRb;
     private bool isMoving;
 
+    public bool IsReady => upperPosition != null && platformRb != null;
+    public bool IsMoving => isMoving;
+
     private void Awake()
     {
         platformRb = GetComponent<Rigidbody2D>();
+
         platformRb.bodyType = RigidbodyType2D.Kinematic;
         platformRb.gravityScale = 0f;
     }
 
-    public void StartRescue(Transform player)
+    public bool StartRescue(Transform player)
     {
-        if (isMoving || player == null || upperPosition == null)
+        if (isMoving)
         {
-            Debug.LogWarning(
+            Debug.LogWarning("RescuePlatform: Platform is already moving.");
+            return false;
+        }
+
+        if (player == null || !IsReady)
+        {
+            Debug.LogError(
                 "RescuePlatform: Player or Upper Position is missing."
             );
-            return;
+            return false;
         }
 
         StartCoroutine(MovePlatform(player));
+        return true;
     }
 
     private IEnumerator MovePlatform(Transform player)
@@ -43,6 +53,9 @@ public class RescuePlatform : MonoBehaviour
             upperPosition.position
         ) > 0.02f)
         {
+            if (player == null)
+                break;
+
             Vector2 nextPosition = Vector2.MoveTowards(
                 platformRb.position,
                 upperPosition.position,
@@ -65,9 +78,13 @@ public class RescuePlatform : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        platformRb.position = upperPosition.position;
+        if (player != null)
+        {
+            platformRb.MovePosition(upperPosition.position);
+        }
+
         isMoving = false;
 
-        Debug.Log("Rescue platform reached the upper position.");
+        Debug.Log("RescuePlatform: Reached upper position.");
     }
 }

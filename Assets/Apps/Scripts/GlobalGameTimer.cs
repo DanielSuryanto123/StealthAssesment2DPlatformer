@@ -23,7 +23,6 @@ public class GlobalGameTimer : MonoBehaviour
 
     private void Awake()
     {
-        // Prevent duplicate timers
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -31,18 +30,10 @@ public class GlobalGameTimer : MonoBehaviour
         }
 
         Instance = this;
-
-        // Keep timer and its Canvas across scenes
         DontDestroyOnLoad(gameObject);
 
         remainingTime = totalTime;
         UpdateTimerDisplay();
-    }
-
-    private void Start()
-    {
-        // Start automatically when the game begins
-        StartTimer();
     }
 
     private void Update()
@@ -59,7 +50,6 @@ public class GlobalGameTimer : MonoBehaviour
             timeExpired = true;
 
             UpdateTimerDisplay();
-
             Debug.Log("GLOBAL TIMER EXPIRED!");
 
             OnTimeExpired?.Invoke();
@@ -71,8 +61,7 @@ public class GlobalGameTimer : MonoBehaviour
 
     public void StartTimer()
     {
-        if (timeExpired)
-            return;
+        if (timeExpired) return;
 
         timerRunning = true;
     }
@@ -84,8 +73,7 @@ public class GlobalGameTimer : MonoBehaviour
 
     public void UpdateTimerDisplay()
     {
-        if (timerText == null)
-            return;
+        if (timerText == null) return;
 
         int minutes = Mathf.FloorToInt(remainingTime / 60f);
         int seconds = Mathf.FloorToInt(remainingTime % 60f);

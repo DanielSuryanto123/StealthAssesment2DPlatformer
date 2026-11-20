@@ -20,6 +20,8 @@ public class LeverController : MonoBehaviour
     [SerializeField] private GameObject wrongColorFeedback;
     [SerializeField] private GameObject activationVfx;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip activationSound;
     private readonly Dictionary<string, InputHandler> nearbyPlayers =
         new Dictionary<string, InputHandler>();
 

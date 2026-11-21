@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 using CoLab.Telemetry;
@@ -10,15 +9,40 @@ public class Level3SyncSwitch : MonoBehaviour
     [Header("Switch Settings")]
     [SerializeField] private string requiredPlayerTag = "Player1";
 
+    [Header("Visual Settings")]
+    [SerializeField] private SpriteRenderer switchRenderer;
+    [SerializeField] private Sprite offSprite;
+    [SerializeField] private Sprite onSprite;
+
     [Header("Manager")]
     [SerializeField] private Level3SyncManager syncManager;
 
     private readonly Dictionary<string, int> playerContactCount =
         new Dictionary<string, int>();
 
+    private InputHandler nearbyInput;
+    private bool isActivated;
+
     private void Awake()
     {
         GetComponent<Collider2D>().isTrigger = true;
+
+        if (switchRenderer == null)
+            switchRenderer = GetComponent<SpriteRenderer>();
+
+        UpdateVisual();
+    }
+
+    private void Update()
+    {
+        if (nearbyInput == null || isActivated)
+            return;
+
+        if (nearbyInput.InteractPressed)
+        {
+            nearbyInput.ResetInteract();
+            ActivateSwitch();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -38,21 +62,17 @@ public class Level3SyncSwitch : MonoBehaviour
 
         playerContactCount[playerTag] = count + 1;
 
-        // Only record the first collider entering.
         if (count > 0)
             return;
 
-        Debug.Log(playerTag + " stepped onto " + gameObject.name);
+        InputHandler input = playerRoot.GetComponent<InputHandler>();
 
-        RecordButtonEvent(
-            TelemetryEventType.STEP_ON_BUTTON,
-            playerTag
-        );
+        if (input == null)
+            input = playerRoot.GetComponentInChildren<InputHandler>();
 
-        if (syncManager != null)
-            syncManager.RegisterSwitch(playerTag);
-        else
-            Debug.LogWarning("Level3SyncManager is not assigned!");
+        nearbyInput = input;
+
+        Debug.Log(playerTag + " is near " + gameObject.name);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -73,12 +93,44 @@ public class Level3SyncSwitch : MonoBehaviour
 
         playerContactCount.Remove(playerTag);
 
-        Debug.Log(playerTag + " stepped off " + gameObject.name);
+        nearbyInput = null;
+
+        // Reset the switch when the player leaves.
+        isActivated = false;
+        UpdateVisual();
+
+        Debug.Log(playerTag + " left " + gameObject.name);
+    }
+
+    private void ActivateSwitch()
+    {
+        if (syncManager == null)
+        {
+            Debug.LogWarning("Level3SyncManager is not assigned!");
+            return;
+        }
+
+        isActivated = true;
+        UpdateVisual();
+
+        Debug.Log(requiredPlayerTag + " activated " + gameObject.name);
 
         RecordButtonEvent(
-            TelemetryEventType.STEP_OFF_BUTTON,
-            playerTag
+            TelemetryEventType.STEP_ON_BUTTON,
+            requiredPlayerTag
         );
+
+        syncManager.RegisterSwitch(requiredPlayerTag);
+    }
+
+    private void UpdateVisual()
+    {
+        if (switchRenderer == null)
+            return;
+
+        switchRenderer.sprite = isActivated
+            ? onSprite
+            : offSprite;
     }
 
     private void RecordButtonEvent(

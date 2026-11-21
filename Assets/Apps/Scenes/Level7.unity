@@ -574,7 +574,6 @@ GameObject:
   m_Component:
   - component: {fileID: 242539711}
   - component: {fileID: 242539712}
-  - component: {fileID: 242539713}
   m_Layer: 0
   m_Name: Darkness2
   m_TagString: Untagged
@@ -656,21 +655,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &242539713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 242539710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff42b452fd4f0b2468fa451591b5488d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CorridorReveal
-  darkness: {fileID: 242539710}
-  revealForBothPlayers: 1
-  requiredPlayerTag: 
 --- !u!1001 &261580015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1575,6 +1559,7 @@ GameObject:
   m_Component:
   - component: {fileID: 684794875}
   - component: {fileID: 684794876}
+  - component: {fileID: 684794877}
   m_Layer: 0
   m_Name: RevealTrigger2
   m_TagString: Untagged
@@ -1643,6 +1628,21 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &684794877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684794874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff42b452fd4f0b2468fa451591b5488d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CorridorReveal
+  darkness: {fileID: 242539710}
+  revealForBothPlayers: 1
+  requiredPlayerTag: 
 --- !u!1 &704706214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1803,7 +1803,7 @@ Transform:
   m_GameObject: {fileID: 779251450}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.09, y: 5.14, z: 0}
+  m_LocalPosition: {x: -6.02, y: 6.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12311,7 +12311,7 @@ Transform:
   m_GameObject: {fileID: 2093372869}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.09, y: 0.24, z: 0}
+  m_LocalPosition: {x: -6.02, y: 1.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

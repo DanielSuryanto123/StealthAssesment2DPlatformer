@@ -299,7 +299,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level3SyncSwitch
   requiredPlayerTag: Player1
+  switchRenderer: {fileID: 241314156}
+  offSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  onSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   syncManager: {fileID: 2138034387}
+--- !u!212 &241314156 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 323427766803887504, guid: a66e00e96f480644f98c3e7b1b3b977e, type: 3}
+  m_PrefabInstance: {fileID: 241314153}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &247206950
 GameObject:
   m_ObjectHideFlags: 0
@@ -4582,7 +4590,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level3SyncSwitch
   requiredPlayerTag: Player2
+  switchRenderer: {fileID: 1403273106}
+  offSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  onSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   syncManager: {fileID: 2138034387}
+--- !u!212 &1403273106 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 323427766803887504, guid: a66e00e96f480644f98c3e7b1b3b977e, type: 3}
+  m_PrefabInstance: {fileID: 1403273103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1648508733
 GameObject:
   m_ObjectHideFlags: 0

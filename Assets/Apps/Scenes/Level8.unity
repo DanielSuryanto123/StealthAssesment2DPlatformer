@@ -540,8 +540,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8401f62ba8c62429b8ea3d85e2cadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level6DeadzoneLever
+  player1Only: 1
+  player2Only: 0
   targetDeadzone: {fileID: 401168829}
-  singleUse: 1
+  leverRenderer: {fileID: 525212180}
+  offSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  onSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  wrongColorFeedback: {fileID: 0}
+  activationVfx: {fileID: 0}
+  audioSource: {fileID: 0}
+  activationSound: {fileID: 8300000, guid: f59cddc8caa217e4b8c062e7fbdcfc23, type: 3}
 --- !u!212 &525212180
 SpriteRenderer:
   serializedVersion: 2
@@ -591,7 +599,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  m_Sprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -869,8 +877,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9823ee3e0feda7a49babd20311004dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level3SyncSwitch
-  requiredPlayerTag: Player1
-  syncManager: {fileID: 0}
+  requiredPlayerTag: 
+  syncManager: {fileID: 297626683}
 --- !u!1 &702594865 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2807082090315733998, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
@@ -11656,8 +11664,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f8401f62ba8c62429b8ea3d85e2cadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level6DeadzoneLever
+  player1Only: 1
+  player2Only: 0
   targetDeadzone: {fileID: 498828128}
-  singleUse: 1
+  leverRenderer: {fileID: 1286214787}
+  offSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  onSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  wrongColorFeedback: {fileID: 0}
+  activationVfx: {fileID: 0}
+  audioSource: {fileID: 0}
+  activationSound: {fileID: 8300000, guid: f59cddc8caa217e4b8c062e7fbdcfc23, type: 3}
 --- !u!212 &1286214787
 SpriteRenderer:
   serializedVersion: 2
@@ -11707,7 +11723,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  m_Sprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -15792,8 +15808,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9823ee3e0feda7a49babd20311004dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level3SyncSwitch
-  requiredPlayerTag: Player1
-  syncManager: {fileID: 0}
+  requiredPlayerTag: 
+  syncManager: {fileID: 297626683}
 --- !u!1 &2012639706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4324299458459810481, guid: b61d8057e60c0b84e989ac587dbb1d9e, type: 3}

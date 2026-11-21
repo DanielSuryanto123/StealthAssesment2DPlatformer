@@ -410,7 +410,7 @@ Transform:
   m_GameObject: {fileID: 401168828}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -38.74961, y: 15.035959, z: 0}
+  m_LocalPosition: {x: -34.6, y: 15.16, z: 0}
   m_LocalScale: {x: 15, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -503,7 +503,7 @@ Transform:
   m_GameObject: {fileID: 498828127}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -23.74961, y: 15.035959, z: 0}
+  m_LocalPosition: {x: -20.91, y: 15.13, z: 0}
   m_LocalScale: {x: 15, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -878,7 +878,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level3SyncSwitch
   requiredPlayerTag: 
+  switchRenderer: {fileID: 680889484}
+  offSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  onSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   syncManager: {fileID: 297626683}
+--- !u!212 &680889484 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 323427766803887504, guid: a66e00e96f480644f98c3e7b1b3b977e, type: 3}
+  m_PrefabInstance: {fileID: 680889480}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &702594865 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2807082090315733998, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
@@ -15809,7 +15817,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level3SyncSwitch
   requiredPlayerTag: 
+  switchRenderer: {fileID: 1956122760}
+  offSprite: {fileID: -6399760106241492965, guid: cde764549ac2069438194e8abf7a748d, type: 3}
+  onSprite: {fileID: 1311448244589724767, guid: cde764549ac2069438194e8abf7a748d, type: 3}
   syncManager: {fileID: 297626683}
+--- !u!212 &1956122760 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 323427766803887504, guid: a66e00e96f480644f98c3e7b1b3b977e, type: 3}
+  m_PrefabInstance: {fileID: 1956122756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2012639706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4324299458459810481, guid: b61d8057e60c0b84e989ac587dbb1d9e, type: 3}

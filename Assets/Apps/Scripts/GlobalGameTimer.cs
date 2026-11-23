@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using TMPro;
 using System;
@@ -12,6 +11,8 @@ public class GlobalGameTimer : MonoBehaviour
     [SerializeField] private TMP_Text timerText;
 
     private float remainingTime;
+    private float levelTimeCheckpoint;
+
     private bool timerRunning;
     private bool timeExpired;
 
@@ -33,6 +34,8 @@ public class GlobalGameTimer : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         remainingTime = totalTime;
+        levelTimeCheckpoint = totalTime;
+
         UpdateTimerDisplay();
     }
 
@@ -69,6 +72,26 @@ public class GlobalGameTimer : MonoBehaviour
     public void StopTimer()
     {
         timerRunning = false;
+    }
+
+    // Save the remaining time when entering a level.
+    public void SaveLevelCheckpoint()
+    {
+        levelTimeCheckpoint = remainingTime;
+
+        Debug.Log("Level checkpoint saved: " + levelTimeCheckpoint);
+    }
+
+    // Restore the saved time when restarting the current level.
+    public void RestoreLevelCheckpoint()
+    {
+        remainingTime = levelTimeCheckpoint;
+        timeExpired = false;
+        timerRunning = true;
+
+        UpdateTimerDisplay();
+
+        Debug.Log("Level checkpoint restored: " + remainingTime);
     }
 
     public void UpdateTimerDisplay()

@@ -1499,6 +1499,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Start New Session
       objectReference: {fileID: 0}
+    - target: {fileID: 4881910046916193222, guid: dfe459e0989b3934da7853c273657510, type: 3}
+      propertyPath: m_fontSize
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881910046916193222, guid: dfe459e0989b3934da7853c273657510, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 7112577373107695728, guid: dfe459e0989b3934da7853c273657510, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

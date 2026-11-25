@@ -83,7 +83,7 @@ public class PitfallRescueManager : MonoBehaviour
         );
     }
 
-    public void ActivateRescue(GameObject player)
+    public void ActivateRescue(GameObject player, Component lever = null)
     {
         if (player == null || !player.CompareTag(rescuerPlayerTag))
             return;
@@ -112,6 +112,14 @@ public class PitfallRescueManager : MonoBehaviour
 
         if (!IsTrappedPlayerOnPlatform())
         {
+            LogEvent(
+                rescuerPlayerTag,
+                EventType.RESCUE_ATTEMPT_EARLY,
+                false,
+                0f,
+                lever
+            );
+
             Debug.Log(
                 "Rescue unavailable: Player2 is not touching the rescue platform."
             );
@@ -128,10 +136,11 @@ public class PitfallRescueManager : MonoBehaviour
         rescueCompleted = true;
 
         LogEvent(
-            trappedPlayerTag,
+            rescuerPlayerTag,
             EventType.RESCUE_TIME,
             false,
-            rescueDuration
+            rescueDuration,
+            lever
         );
 
         SetTrapped(false);
@@ -157,7 +166,8 @@ public class PitfallRescueManager : MonoBehaviour
         string playerTag,
         EventType eventType,
         bool isTrapped,
-        float durationSeconds)
+        float durationSeconds,
+        Component target = null)
     {
         if (AnalyticsManager.Instance == null ||
             !AnalyticsManager.TryGetPlayerID(
@@ -169,7 +179,8 @@ public class PitfallRescueManager : MonoBehaviour
             playerID,
             eventType,
             isTrapped,
-            durationSeconds
+            durationSeconds,
+            target
         );
     }
 }

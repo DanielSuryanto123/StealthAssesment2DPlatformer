@@ -4,7 +4,7 @@ using CoLab.Telemetry;
 using TelemetryEventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
-public class Level3SyncSwitch : MonoBehaviour
+public class Level3SyncSwitch : MonoBehaviour, ITelemetryTarget
 {
     [Header("Switch Settings")]
     [SerializeField] private string requiredPlayerTag = "Player1";
@@ -95,6 +95,10 @@ public class Level3SyncSwitch : MonoBehaviour
 
         nearbyInput = null;
 
+        // Scene unload also fires trigger exits; those are not the player leaving.
+        if (isActivated && syncManager != null && gameObject.scene.isLoaded)
+            syncManager.UnregisterSwitch(requiredPlayerTag, this);
+
         // Reset the switch when the player leaves.
         isActivated = false;
         UpdateVisual();
@@ -120,7 +124,7 @@ public class Level3SyncSwitch : MonoBehaviour
             requiredPlayerTag
         );
 
-        syncManager.RegisterSwitch(requiredPlayerTag);
+        syncManager.RegisterSwitch(requiredPlayerTag, this);
     }
 
     private void UpdateVisual()
@@ -145,7 +149,8 @@ public class Level3SyncSwitch : MonoBehaviour
         {
             AnalyticsManager.Instance.LogEvent(
                 playerId,
-                eventType
+                eventType,
+                target: this
             );
         }
     }

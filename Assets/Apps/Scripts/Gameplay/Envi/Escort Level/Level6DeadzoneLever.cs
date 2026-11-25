@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using CoLab.Telemetry;
 using UnityEngine;
+using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
-public class Level6DeadzoneLever : MonoBehaviour
+public class Level6DeadzoneLever : MonoBehaviour, ITelemetryTarget
 {
     [Header("Player Settings")]
     [SerializeField] private bool player1Only;
@@ -184,6 +186,8 @@ public class Level6DeadzoneLever : MonoBehaviour
         }
 
         targetDeadzone.ReleasePlayer(actor);
+
+        AnalyticsManager.Instance?.LogEvent(actor, EventType.PULL_LEVER, target: this);
 
         Debug.Log(name + " successfully rescued Player1!");
     }

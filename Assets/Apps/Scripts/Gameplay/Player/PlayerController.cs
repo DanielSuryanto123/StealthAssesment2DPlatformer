@@ -34,8 +34,6 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded => isGrounded;
 
-    // True from the moment a jump leaves the ground until its outcome (landing or hazard) is logged.
-    private bool jumpInProgress;
     // True after a hazard was entered until the player touches solid ground again or respawns.
     private bool inHazard;
 
@@ -100,26 +98,17 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity.x,
             jumpForce
         );
-
-        jumpInProgress = true;
     }
 
-    /// <summary>Called by hazards when this player touches them. A jump in progress counts as failed.</summary>
+    /// <summary>Called by hazards when this player touches them; pings then ask for help.</summary>
     public void NotifyHazardEntered()
     {
         inHazard = true;
-
-        if (jumpInProgress)
-        {
-            jumpInProgress = false;
-            LogEvent(EventType.JUMP_FAIL);
-        }
     }
 
-    /// <summary>Clears jump/hazard state (used on respawn); no event is logged.</summary>
-    public void ResetJumpState()
+    /// <summary>Clears hazard state (used on respawn).</summary>
+    public void ResetHazardState()
     {
-        jumpInProgress = false;
         inHazard = false;
     }
 
@@ -138,12 +127,6 @@ public class PlayerController : MonoBehaviour
         if (collision.contactCount > 0 && collision.GetContact(0).normal.y > 0.5f)
         {
             inHazard = false;
-
-            if (jumpInProgress)
-            {
-                jumpInProgress = false;
-                LogEvent(EventType.JUMP_SUCCESS);
-            }
         }
 
         if (collision.gameObject.CompareTag("Ground"))

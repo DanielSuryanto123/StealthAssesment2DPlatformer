@@ -1,0 +1,15 @@
+{
+  "name": "CoLab.Telemetry.EvidenceTests",
+  "references": [
+    "Co-Lab.Telemetry",
+    "UnityEngine.TestRunner"
+  ],
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll"
+  ],
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "autoReferenced": false
+}

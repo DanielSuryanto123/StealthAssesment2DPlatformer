@@ -1,10 +1,12 @@
 
 using System;
 using System.Collections.Generic;
+using CoLab.Telemetry;
 using UnityEngine;
+using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
-public class LeverController : MonoBehaviour
+public class LeverController : MonoBehaviour, ITelemetryTarget
 {
     [Header("Player Settings")]
     [SerializeField] private bool player1Only;
@@ -184,6 +186,8 @@ public class LeverController : MonoBehaviour
 
         // Notify Level6DeadzoneLever.
         Activated?.Invoke(actor);
+
+        AnalyticsManager.Instance?.LogEvent(actor, EventType.PULL_LEVER, target: this);
 
         Debug.Log(name + " activated permanently!");
     }

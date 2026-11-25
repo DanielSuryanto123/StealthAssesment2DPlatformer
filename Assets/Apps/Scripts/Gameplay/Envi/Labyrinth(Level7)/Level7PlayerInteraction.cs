@@ -42,6 +42,8 @@ public class Level7PlayerInteraction : MonoBehaviour
 
             if (puzzleButton != null)
             {
+                // Consume the press so the button's own Update cannot handle it a second time.
+                inputHandler.ResetInteract();
                 puzzleButton.Interact(gameObject);
                 return;
             }
@@ -51,6 +53,7 @@ public class Level7PlayerInteraction : MonoBehaviour
 
             if (platformButton != null)
             {
+                inputHandler.ResetInteract();
                 platformButton.Interact(gameObject);
                 return;
             }

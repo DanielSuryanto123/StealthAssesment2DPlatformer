@@ -1,6 +1,4 @@
 using UnityEngine;
-using CoLab.Telemetry;
-using EventType = CoLab.Telemetry.EventType;
 
 /// <summary>
 /// Handles moving this player back to their last checkpoint after a
@@ -16,23 +14,15 @@ public class PlayerRespawn : MonoBehaviour
     [SerializeField] private GameObject respawnVfx;
 
     private Rigidbody2D rb;
-    private float lastHazardTime;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    /// <summary>Remembers when the hazard hit happened, so Respawn can log how long the player was down.</summary>
-    public void NotifyHazard()
-    {
-        lastHazardTime = Time.time;
-    }
-
     public void Respawn()
     {
-        AnalyticsManager.Instance?.LogEvent(transform, EventType.LEVEL_RESTART, true, Mathf.Max(0f, Time.time - lastHazardTime));
-        GetComponent<PlayerController>()?.ResetJumpState();
+        GetComponent<PlayerController>()?.ResetHazardState();
 
         if (rb == null)
         {

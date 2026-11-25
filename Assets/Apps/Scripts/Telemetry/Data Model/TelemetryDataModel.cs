@@ -19,9 +19,14 @@ namespace CoLab.Telemetry
         public PositionDataModel player_pos;
         public PositionDataModel partner_pos;
         public bool isTrapped;
+        /// <summary>Kosong jika event tidak terkait objek; object_distance hanya berarti jika object_id terisi.</summary>
+        public string object_id;
+        public float object_distance;
 
-        public TelemetryDataModel(StageID stageID, float timestamp, EventType eventType, float duration, PlayerID playerId, PositionDataModel playerPositionDataModel, PositionDataModel partnerPositionDataModel, bool isTrapped)
+        public TelemetryDataModel(StageID stageID, float timestamp, EventType eventType, float duration, PlayerID playerId, PositionDataModel playerPositionDataModel, PositionDataModel partnerPositionDataModel, bool isTrapped, string objectId = "", float objectDistance = 0f)
         {
+            this.object_id = objectId;
+            this.object_distance = objectDistance;
             this.stage_id = stageID.ToString();
             this.timestamp = timestamp;
             this.event_type = eventType.ToString();

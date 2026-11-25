@@ -73,7 +73,7 @@ public class BlindSyncManager : MonoBehaviour
             if (targetGroupController != null)
             targetGroupController.FocusOnBothPlayers();
             SetGateOpen(true);
-            LogEvent(EventType.SYNC_ACTION, playerTag);
+            LogEvent(EventType.SYNC_ACTION, playerTag, Time.time - firstActivationTime);
         }
     }
 
@@ -116,12 +116,14 @@ public class BlindSyncManager : MonoBehaviour
             blueGateCollider.enabled = !open;
     }
 
-    private void LogEvent(EventType eventType, string playerTag)
+    private void LogEvent(EventType eventType, string playerTag, float duration = 0f)
     {
         if (AnalyticsManager.Instance == null ||
             !AnalyticsManager.TryGetPlayerID(playerTag, out PlayerID playerID))
             return;
 
-        AnalyticsManager.Instance.LogEvent(playerID, eventType);
+        BlindSyncSwitch playerSwitch = playerTag == "Player1" ? redSwitch : blueSwitch;
+
+        AnalyticsManager.Instance.LogEvent(playerID, eventType, false, duration, playerSwitch);
     }
 }

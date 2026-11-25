@@ -3,7 +3,7 @@ using CoLab.Telemetry;
 using EventType = CoLab.Telemetry.EventType;
 using System.Collections;
 
-public class Level7Button : MonoBehaviour
+public class Level7Button : MonoBehaviour, ITelemetryTarget
 {
     public enum AllowedPlayer
     {
@@ -64,7 +64,6 @@ public class Level7Button : MonoBehaviour
 
         if (!allowed)
         {
-            LogInvalidInteraction(actor);
             ShowWrongColorFeedback();
 
             Debug.Log(actor.name + " cannot activate " + gameObject.name);
@@ -92,18 +91,11 @@ public class Level7Button : MonoBehaviour
 
         AnalyticsManager.Instance?.LogEvent(
             actor.transform,
-            EventType.STEP_ON_BUTTON
+            EventType.STEP_ON_BUTTON,
+            target: this
         );
 
         Debug.Log("Puzzle button " + buttonID + " activated.");
-    }
-
-    private void LogInvalidInteraction(GameObject actor)
-    {
-        AnalyticsManager.Instance?.LogEvent(
-            actor.transform,
-            EventType.INVALID_INTERACT
-        );
     }
 
     private void ShowWrongColorFeedback()

@@ -28,6 +28,13 @@
         RESCUE_TIME,   // Durasi dari saat partner terjebak hingga tuas penyelamat ditarik
 
         // Aksi Hazard
-        HAZARD_ZONE_ENTERED // pemain masuk zona bahaya (Level 6)
+        HAZARD_ZONE_ENTERED, // pemain masuk zona bahaya (Level 6)
+
+        // Evidence Perspective Taking (docs/telemetry-perspective-taking.md)
+        PING_RESPONSE,        // partner menanggapi ping; duration = waktu respons
+        RESCUE_ATTEMPT_EARLY, // lever penyelamat ditarik saat korban belum di platform
+        CALL_PLATFORM,
+        PORTAL_ENTER,
+        PORTAL_EXIT
     }
 }

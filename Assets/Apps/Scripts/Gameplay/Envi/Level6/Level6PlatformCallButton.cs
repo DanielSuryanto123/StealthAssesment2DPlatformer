@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using CoLab.Telemetry;
 using UnityEngine;
+using EventType = CoLab.Telemetry.EventType;
 
 [RequireComponent(typeof(Collider2D))]
-public class Level6PlatformCallButton : MonoBehaviour
+public class Level6PlatformCallButton : MonoBehaviour, ITelemetryTarget
 {
     [Header("Player Settings")]
     [SerializeField] private bool player1Only;
@@ -171,6 +173,8 @@ public class Level6PlatformCallButton : MonoBehaviour
             boardingFloorIndex,
             destinationIndex
         );
+
+        AnalyticsManager.Instance?.LogEvent(actor.transform, EventType.CALL_PLATFORM, target: this);
 
         PlayFeedback();
 

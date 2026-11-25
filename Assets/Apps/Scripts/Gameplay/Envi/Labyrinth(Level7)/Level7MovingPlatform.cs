@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Level7MovingPlatform : MonoBehaviour
+public class Level7MovingPlatform : MonoBehaviour, CoLab.Telemetry.ITelemetryTarget
 {
     private enum ElevatorState
     {

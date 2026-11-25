@@ -11,8 +11,11 @@ public class Level3SyncManager : MonoBehaviour
     private bool redSwitchActivated;
     private bool blueSwitchActivated;
     private bool puzzleCompleted;
+    private float firstActivationTime;
 
-    public void RegisterSwitch(string playerTag)
+    public bool IsCompleted => puzzleCompleted;
+
+    public void RegisterSwitch(string playerTag, Component source = null)
     {
         if (puzzleCompleted)
             return;
@@ -38,33 +41,60 @@ public class Level3SyncManager : MonoBehaviour
             return;
         }
 
-        CheckSynchronization();
+        CheckSynchronization(playerTag, source);
     }
 
-    private void CheckSynchronization()
+    /// <summary>The player left their switch before the partner pressed: the attempt failed.</summary>
+    public void UnregisterSwitch(string playerTag, Component source = null)
+    {
+        if (puzzleCompleted)
+            return;
+
+        if (playerTag == "Player1" && redSwitchActivated)
+            redSwitchActivated = false;
+        else if (playerTag == "Player2" && blueSwitchActivated)
+            blueSwitchActivated = false;
+        else
+            return;
+
+        LogEvent(TelemetryEventType.STEP_OFF_BUTTON, playerTag, source);
+        LogEvent(TelemetryEventType.SYNC_FAIL, playerTag, source);
+    }
+
+    private void CheckSynchronization(string followerTag, Component source)
     {
         if (!redSwitchActivated || !blueSwitchActivated)
+        {
+            firstActivationTime = Time.time;
             return;
+        }
 
         puzzleCompleted = true;
 
         if (sharedDoor != null)
             sharedDoor.OpenDoor();
 
-        // Record successful synchronization for both players.
-        if (AnalyticsManager.Instance != null)
-        {
-            AnalyticsManager.Instance.LogEvent(
-                PlayerID.PLAYER_1,
-                TelemetryEventType.SYNC_ACTION
-            );
-
-            AnalyticsManager.Instance.LogEvent(
-                PlayerID.PLAYER_2,
-                TelemetryEventType.SYNC_ACTION
-            );
-        }
+        // Only the follower gets SYNC_ACTION; duration is the gap between the two presses.
+        LogEvent(
+            TelemetryEventType.SYNC_ACTION,
+            followerTag,
+            source,
+            Time.time - firstActivationTime
+        );
 
         Debug.Log("LEVEL 3 SYNC SUCCESS! Shared door opened.");
+    }
+
+    private static void LogEvent(
+        TelemetryEventType eventType,
+        string playerTag,
+        Component source,
+        float duration = 0f)
+    {
+        if (AnalyticsManager.Instance == null ||
+            !AnalyticsManager.TryGetPlayerID(playerTag, out PlayerID playerId))
+            return;
+
+        AnalyticsManager.Instance.LogEvent(playerId, eventType, false, duration, source);
     }
 }

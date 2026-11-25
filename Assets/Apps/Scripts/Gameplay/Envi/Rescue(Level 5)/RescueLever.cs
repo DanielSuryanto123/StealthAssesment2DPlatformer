@@ -3,7 +3,7 @@ using CoLab.Telemetry;
 using UnityEngine;
 using EventType = CoLab.Telemetry.EventType;
 
-public class RescueLever : MonoBehaviour
+public class RescueLever : MonoBehaviour, ITelemetryTarget
 {
     [Header("Rescue Settings")]
     [SerializeField] private string requiredPlayerTag = "Player1";
@@ -17,11 +17,6 @@ public class RescueLever : MonoBehaviour
     private readonly Dictionary<string, InputHandler> playersNearby = new();
 
     private bool activated;
-
-    private const float InvalidInteractDebounceSeconds = 0.25f;
-
-    private readonly Dictionary<string, float> lastInvalidInteractTime =
-        new();
 
     private void Start()
     {
@@ -40,7 +35,6 @@ public class RescueLever : MonoBehaviour
         if (playersNearby.TryGetValue(wrongTag, out InputHandler wrongInput) &&
             wrongInput != null && wrongInput.InteractPressed)
         {
-            LogInvalidInteract(wrongTag, wrongInput.transform);
             wrongInput.ResetInteract();
         }
 
@@ -53,7 +47,7 @@ public class RescueLever : MonoBehaviour
 
             Debug.Log("RescueLever: Interaction received from " + player.tag);
 
-            rescueManager.ActivateRescue(player);
+            rescueManager.ActivateRescue(player, this);
 
             if (rescueManager.IsRescueCompleted)
             {
@@ -62,7 +56,8 @@ public class RescueLever : MonoBehaviour
 
                 AnalyticsManager.Instance?.LogEvent(
                     player.transform,
-                    EventType.PULL_LEVER
+                    EventType.PULL_LEVER,
+                    target: this
                 );
 
                 Debug.Log("RescueLever: Rescue completed!");
@@ -113,20 +108,6 @@ public class RescueLever : MonoBehaviour
                 playerRoot.name + " exited RescueLever."
             );
         }
-    }
-
-    private void LogInvalidInteract(string playerTag, Transform actor)
-    {
-        if (lastInvalidInteractTime.TryGetValue(playerTag, out float last) &&
-            Time.time - last < InvalidInteractDebounceSeconds)
-            return;
-
-        lastInvalidInteractTime[playerTag] = Time.time;
-
-        AnalyticsManager.Instance?.LogEvent(
-            actor,
-            EventType.INVALID_INTERACT
-        );
     }
 
     public void ResetLever()

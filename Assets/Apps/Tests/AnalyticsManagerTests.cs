@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using System.Reflection;
 using CoLab.Telemetry;
 using NUnit.Framework;
@@ -219,11 +220,41 @@ namespace CoLab.Telemetry.Tests
             );
             // 2. Jalankan Coroutine SendData dan tunggu hingga selesai
             yield return _analyticsManager.SendData();
-            // 3. Verifikasi Efek Samping: 
-            // Jika sukses, SendData() akan memanggil EndSession() di blok 'else',
-            // yang berarti _sessionDataModel akan diubah kembali menjadi null.
+            // 3. Verifikasi: log dilepas dari memori dan antrean di disk habis setelah server menerima.
             var sessionModel = GetPrivateField<SessionDataModel>(_analyticsManager, "_sessionDataModel");
-            Assert.IsNull(sessionModel, "Data model harus dibersihkan (null) setelah pengiriman sukses.");
+            Assert.IsEmpty(sessionModel.raw_logs);
+
+            string pending = Path.Combine(Application.persistentDataPath, "telemetry_pending");
+            Assert.IsEmpty(Directory.GetFiles(pending, sessionModel.session_id + "*"),
+                "File antrean harus terhapus setelah pengiriman sukses.");
+        }
+
+        [Test]
+        public void BuildStageRows_GroupsAllAttemptsPerPlayerPerStage()
+        {
+            _analyticsManager.StartSession("S1", "S2");
+            var zero = new PositionDataModel(0f, 0f);
+
+            // Dua percobaan STAGE_1 (gagal lalu berhasil), lalu masuk STAGE_2.
+            foreach (var (stage, player) in new[]
+            {
+                (StageID.STAGE_1, PlayerID.PLAYER_1),
+                (StageID.STAGE_1, PlayerID.PLAYER_1),
+                (StageID.STAGE_1, PlayerID.PLAYER_2),
+                (StageID.STAGE_2, PlayerID.PLAYER_1)
+            })
+            {
+                _analyticsManager.Record(stage, EventType.MOVE_START, 0f, player, zero, zero, false);
+            }
+
+            var rows = _analyticsManager.BuildStageRows(StageID.STAGE_2.ToString());
+
+            Assert.AreEqual(2, rows.Count);
+            Assert.AreEqual("S1", rows[0].student_id);
+            Assert.AreEqual(2, rows[0].raw_logs.Count);
+            Assert.AreEqual("S2", rows[1].student_id);
+            Assert.AreEqual(1, rows[1].raw_logs.Count);
+            Assert.AreEqual(4, _analyticsManager.BuildStageRows(null).Count);
         }
 
         private static T GetPrivateField<T>(object instance, string fieldName)

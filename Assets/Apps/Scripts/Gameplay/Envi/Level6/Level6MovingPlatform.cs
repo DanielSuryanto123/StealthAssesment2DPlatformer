@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Level6MovingPlatform : MonoBehaviour
+public class Level6MovingPlatform : MonoBehaviour, CoLab.Telemetry.ITelemetryTarget
 {
     [Header("Platform Stops")]
     [SerializeField] private Transform startingPoint;

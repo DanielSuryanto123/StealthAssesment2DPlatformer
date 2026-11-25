@@ -36,17 +36,11 @@ public class Level6DeadzoneTrigger : MonoBehaviour
 
         trappedRb.linearVelocity = Vector2.zero;
 
-        // Must run before the controller is disabled so a jump in progress resolves as JUMP_FAIL.
         trappedPlayer.NotifyHazardEntered();
         trappedPlayer.enabled = false;
 
         if (AnalyticsManager.Instance != null)
         {
-            AnalyticsManager.Instance.LogHazardEntered(
-                other.transform,
-                true
-            );
-
             AnalyticsManager.Instance.LogEvent(
                 other.transform,
                 EventType.RESCUE_START,

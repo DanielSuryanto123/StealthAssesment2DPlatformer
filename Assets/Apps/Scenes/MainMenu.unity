@@ -567,6 +567,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1275978749}
   - component: {fileID: 1275978748}
+  - component: {fileID: 1275978750}
   m_Layer: 0
   m_Name: GlobalGameTimer
   m_TagString: Untagged
@@ -604,6 +605,19 @@ Transform:
   - {fileID: 1011061732}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1275978750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275978747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa6e1514e8415634780b86e7d0e5ce11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimerResultHandler
+  resultSceneName: Result
 --- !u!114 &1423458642 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 485005028031323474, guid: 5a2dfb5a1d00dab4a9e61449b1d86d22, type: 3}

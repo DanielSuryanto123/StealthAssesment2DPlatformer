@@ -10543,6 +10543,10 @@ PrefabInstance:
       value: 281
       objectReference: {fileID: 0}
     - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
+      propertyPath: useGamepad
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3698468313943547866, guid: 879f32c534d366348a413f498e2c0fc9, type: 3}
       propertyPath: interactKey
       value: 280
       objectReference: {fileID: 0}
